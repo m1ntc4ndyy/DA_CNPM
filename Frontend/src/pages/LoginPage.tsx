@@ -1,49 +1,28 @@
-import React, { useState, FormEvent } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { User } from '../types';
-
+import React, { useState, FormEvent, useEffect } from 'react';
+import { useAuth} from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
-  const { login } = useAuth();
-
+  const { handleLogin, currentUser } = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setError('');
-    
-    // In a real app, you would validate credentials with a server
-    // For this example, we'll use hardcoded users
-    const adminUser = { email: 'admin@example.com', password: 'admin123' };
-    const studentUser = { email: 'student@example.com', password: 'student123' };
-
-    let userData: User | null = null;
-    
-    if (email === adminUser.email && password === adminUser.password) {
-      userData = { 
-        id: 1, 
-        name: 'Admin User', 
-        email: adminUser.email, 
-        role: 'admin' 
-      };
-    } else if (email === studentUser.email && password === studentUser.password) {
-      userData = { 
-        id: 2, 
-        name: 'Student User', 
-        email: studentUser.email, 
-        role: 'student' 
-      };
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
     }
-
-    if (userData) {
-      login(userData);
-      // Redirect would happen here in a real app
-      window.location.href = '/';
-    } else {
-      setError('Invalid email or password');
-    }
+    handleLogin(email, password);
   };
-
+  useEffect(() => {
+    if (currentUser) {
+      
+        navigate("/"); // Default to main page if role is not recognized
+      
+    }
+  }, [currentUser, navigate]);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">

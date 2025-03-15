@@ -1,11 +1,13 @@
-// import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 // import { Calendar, Clock, MapPin, Users } from 'lucide-react';
-// import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthProvider';
 // import { Event } from '../types';
+// import axiosInstance from '../utils/axiosInstance';
+
 
 // const EventFeed: React.FC = () => {
-//   const { currentUser, isAdmin, isStudent } = useAuth();
+//   const { currentUser,authToken, isAdmin, isStudent } = useAuth();
   
 //   // Sample event data
 //   const [events, setEvents] = useState<Event[]>([
@@ -48,7 +50,27 @@
 //       registeredUsers: []
 //     }
 //   ]);
-
+//   useEffect(() => {
+//         const fetchEvents = async () => {
+//           try {
+//             console.log(authToken)
+//             // const authToken = localStorage.getItem('token');
+//             const response = await axiosInstance.get('/api/event', {
+//               headers: {
+//                 Authorization: `Bearer ${authToken}`
+//               }
+//             });
+//             setEvents(response.data as Event[]);
+//             console.log(response.data);
+//           } catch (error) {
+//             console.error('Error fetching events:', error);
+//           } finally {
+//             // setLoading(false);
+//           }
+//         };
+    
+//         fetchEvents();
+//       }, []);
 //   // Toggle application status
 //   const toggleApply = (id: number): void => {
 //     if (!currentUser) return;
@@ -78,7 +100,7 @@
 //       case 'ongoing': return 'bg-green-100 text-green-800';
 //       case 'ended': return 'bg-gray-100 text-gray-800';
 //       case 'pending': return 'bg-yellow-100 text-yellow-800';
-//       case 'accepted': return 'bg-blue-100 text-blue-800';
+//       case 'approved': return 'bg-blue-100 text-blue-800';
 //       case 'rejected': return 'bg-red-100 text-red-800';
 //       default: return 'bg-gray-100 text-gray-800';
 //     }
@@ -184,24 +206,44 @@
 // export default EventFeed;
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthProvider';
 import { Event } from '../types';
 import eventsData from '../assets/TempEvents.json';
-const EventFeed: React.FC = () => {
-  const { currentUser, isAdmin, isStudent } = useAuth();
+import axiosInstance from '../utils/axiosInstance';
+const EventFeed: React.FC =  () => {
+  const { currentUser, authToken, isAdmin, isStudent } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 3;
-
-  const [events, setEvents] = useState<Event[]>(eventsData as Event[]);
-  // useEffect(() => {
-  //   setEvents(eventsData); // Load the events from JSON file
-  // }, []); 
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(false);
   
-  const toggleApply = (id: number): void => {
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        
+        const response = await axiosInstance.get('/api/event', {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        });
+        setEvents(response.data as Event[]);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+
+  const  toggleApply = async (id: number): Promise<void> => {
     if (!currentUser) return;
     setEvents(
       events.map(event => {
@@ -227,7 +269,7 @@ const EventFeed: React.FC = () => {
       case 'ongoing': return 'bg-green-100 text-green-800';
       case 'ended': return 'bg-gray-100 text-gray-800';
       case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'accepted': return 'bg-blue-100 text-blue-800';
+      case 'approved': return 'bg-blue-100 text-blue-800';
       case 'rejected': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -241,7 +283,7 @@ const EventFeed: React.FC = () => {
   const filteredEvents = events.filter(event => {
     if (isAdmin()) return true;
     if (isStudent()) {
-      return ['accepted', 'ongoing'].includes(event.status);
+      return ['approved', 'ongoing'].includes(event.status);
     }
     return false;
   }).filter(event => 
@@ -266,12 +308,18 @@ const EventFeed: React.FC = () => {
             className="mb-4 p-2 w-[30%] border border-gray-300 rounded" 
           />
         </div>
-
-        {paginatedEvents.length === 0 && (
+        {loading ? (
+          
+          <div className="bg-white rounded-lg shadow p-6 text-center">
+            <p className="text-gray-500">Loading events...</p>
+           
+          </div>
+        ) : 
+        paginatedEvents.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-6 text-center">
             <p className="text-gray-500">No events available.</p>
           </div>
-        )}
+        ) : (
 
         <div className="grid grid-cols-1 gap-6">
           {paginatedEvents.map(event => (
@@ -317,7 +365,7 @@ const EventFeed: React.FC = () => {
             </div>
           ))}
         </div>
-
+        )}
         <div className="flex justify-center mt-6">
           <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)} className="px-4 py-2 mx-1 bg-gray-200 rounded disabled:opacity-50">Prev</button>
           <span className="px-4 py-2">Page {currentPage} of {totalPages}</span>

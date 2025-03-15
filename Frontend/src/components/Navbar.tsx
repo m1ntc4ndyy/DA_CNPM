@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthProvider';
 import { LogOut, User } from 'lucide-react';
 
 const Navbar: React.FC = () => {
-  const { currentUser, isAdmin, logout } = useAuth();
+  const { currentUser, isAdmin, handleLogout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = (): void => {
-    logout();
+  const logout = (): void => {
+    handleLogout();
     navigate('/login');
   };
 
@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
               </span>
             </div>
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="flex items-center bg-blue-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800"
             >
               <LogOut className="h-4 w-4 mr-1" />

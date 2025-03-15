@@ -14,10 +14,11 @@ export interface User {
     date: string;
     time?: string;
     image?: string;
-    status: 'ongoing' | 'ended' | 'pending' | 'accepted' | 'rejected';
+    status: 'ongoing' | 'ended' | 'pending' | 'approved' | 'rejected';
     attendees: number;
     maxAttendees: number;
     registeredUsers: number[];
+    attendedUsers?: number[];
   }
   
   export interface AuthContextType {

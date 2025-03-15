@@ -1,7 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import  AuthProvider  from './context/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import EventFeed from './pages/EventFeed';
