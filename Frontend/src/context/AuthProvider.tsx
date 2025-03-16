@@ -81,6 +81,7 @@ import axiosInstance from "../utils/axiosInstance";
 type AuthContext = {
   authToken?: string | null;
   currentUser?: User | null;
+  loading: boolean;
   handleLogin: (email: string, password: string) => Promise<void>;
   handleLogout: () => Promise<void>;
   hasRole: (role: string) => boolean;
@@ -106,14 +107,14 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   //       }
        
   //     }, []);
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [currentUser, setCurrentUser] = useState<User | null>(getInitial()[0]);
   const [authToken, setAuthToken] = useState<string | null>(getInitial()[1]);
+
   useEffect(() => {
-   
-      sessionStorage.setItem('user', JSON.stringify(currentUser));
-      sessionStorage.setItem('token', JSON.stringify(authToken));
-    
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+    sessionStorage.setItem('token', JSON.stringify(authToken));
+    setLoading(false);
   }, [currentUser]);
   async function handleLogin(email: string, password: string) {
     try {
@@ -147,12 +148,12 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     {
       authToken,
       currentUser,
+      loading,
       handleLogin,
       handleLogout,
       hasRole,
       isAdmin: () => hasRole('admin'),
-      isStudent: () => hasRole('student')
-
+      isStudent: () => hasRole('student'),
     }
   }>{children}</AuthContext.Provider>
 }

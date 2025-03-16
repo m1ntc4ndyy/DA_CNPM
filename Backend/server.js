@@ -20,45 +20,36 @@ const db = require("./app/models");
 
 const User = db.user;
 const Event = db.event;
-db.sequelize.sync({ force: true}).then(() => {
+db.sequelize.sync().then(() => {
   console.log("Drop and Resync Db");
   initial();
 });
 // db.sequelize.sync();
 
-function initial() {
-  
-  User.create({
+async function initial() {
+  const count = await User.count();
+  if (count !== 0) return;
+  await User.create({
     name: "admin",
     email: "admin@gmail.com",
     password: bcrypt.hashSync("1", 8),
     role: "admin",
   });
 
-  User.create({
+  await User.create({
     name: "student",
     email: "student@gmail.com",
     password: bcrypt.hashSync("2", 8),
     role: "student",  
   });
 
-  User.create({
+  await User.create({
     name: "organizer",
     email: "3",
     password: bcrypt.hashSync("3", 8),
     role: "organization",
   });
 
-  Event.create({
-    title: "Science Fair 2025",
-    description: "A school-wide science exhibition showcasing student projects.",
-    date: "2025-04-15",
-    time: "10:00",
-    location: "School Auditorium",
-    maxAttendees: 100,
-    status: "approved",
-    created_by: 1,
-  });
 }
 
 // simple route

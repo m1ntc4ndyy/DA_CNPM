@@ -9,11 +9,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
-  const { currentUser, hasRole } = useAuth();
+  const { currentUser, loading, hasRole } = useAuth();
 
-  // if (loading) {
-  //   return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  // }
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
 
   if (!currentUser) {
     return <Navigate to="/login" />;

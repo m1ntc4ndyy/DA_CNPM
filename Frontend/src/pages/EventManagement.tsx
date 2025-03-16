@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Eye } from 'lucide-react';
 import { useAuth } from '../context/AuthProvider';
 import { Event } from '../types';
+import axiosInstance from '../utils/axiosInstance';
 
 interface EventFormState {
   id?: number;
@@ -15,84 +16,106 @@ interface EventFormState {
 }
 
 const EventManagement: React.FC = () => {
-  const { currentUser } = useAuth();
-  
+  const { currentUser, authToken } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
   // Sample events data
   const [events, setEvents] = useState<Event[]>([
-    {
-      id: 1,
-      title: 'Web Development Workshop',
-      description: 'Learn the fundamentals of modern web development with React and Tailwind CSS.',
-      location: 'Tech Hub, Downtown',
-      date: '2025-03-25',
-      time: '10:00 AM - 2:00 PM',
-      attendees: 24,
-      maxAttendees: 40,
-      status: 'ongoing',
-      registeredUsers: []
-    },
-    {
-      id: 2,
-      title: 'Data Science Meetup',
-      description: 'Join us for an evening of insightful talks and networking.',
-      location: 'Data Center, Midtown',
-      date: '2025-04-10',
-      time: '6:00 PM - 9:00 PM',
-      attendees: 45,
-      maxAttendees: 60,
-      status: 'pending',
-      registeredUsers: [2]
-    },
-    {
-      id: 3,
-      title: 'UI/UX Design Conference',
-      description: 'A full-day conference featuring top designers.',
-      location: 'Design Studio, Westside',
-      date: '2025-05-15',
-      time: '9:00 AM - 5:00 PM',
-      attendees: 32,
-      maxAttendees: 50,
-      status: 'ongoing',
-      registeredUsers: []
-    },
-    {
-      id: 4,
-      title: 'Mobile App Development Hackathon',
-      description: 'Build a mobile app in 24 hours.',
-      location: 'Innovation Hub',
-      date: '2025-04-22',
-      time: '9:00 AM',
-      attendees: 15,
-      maxAttendees: 30,
-      status: 'approved',
-      registeredUsers: []
-    },
-    {
-      id: 5,
-      title: 'Blockchain Technology Seminar',
-      description: 'Learn about the latest in blockchain technology.',
-      location: 'Tech Campus',
-      date: '2025-03-18',
-      time: '2:00 PM',
-      attendees: 8,
-      maxAttendees: 25,
-      status: 'rejected',
-      registeredUsers: []
-    },
-    {
-      id: 6,
-      title: 'Digital Marketing Workshop',
-      description: 'Boost your digital marketing skills.',
-      location: 'Marketing Center',
-      date: '2025-02-10',
-      time: '10:00 AM',
-      attendees: 50,
-      maxAttendees: 50,
-      status: 'ended',
-      registeredUsers: []
-    }
+    // {
+    //   id: 1,
+    //   title: 'Web Development Workshop',
+    //   description: 'Learn the fundamentals of modern web development with React and Tailwind CSS.',
+    //   location: 'Tech Hub, Downtown',
+    //   date: '2025-03-25',
+    //   time: '10:00 AM - 2:00 PM',
+    //   attendees: 24,
+    //   maxAttendees: 40,
+    //   status: 'ongoing',
+    //   registeredUsers: []
+    // },
+    // {
+    //   id: 2,
+    //   title: 'Data Science Meetup',
+    //   description: 'Join us for an evening of insightful talks and networking.',
+    //   location: 'Data Center, Midtown',
+    //   date: '2025-04-10',
+    //   time: '6:00 PM - 9:00 PM',
+    //   attendees: 45,
+    //   maxAttendees: 60,
+    //   status: 'pending',
+    //   registeredUsers: [2]
+    // },
+    // {
+    //   id: 3,
+    //   title: 'UI/UX Design Conference',
+    //   description: 'A full-day conference featuring top designers.',
+    //   location: 'Design Studio, Westside',
+    //   date: '2025-05-15',
+    //   time: '9:00 AM - 5:00 PM',
+    //   attendees: 32,
+    //   maxAttendees: 50,
+    //   status: 'ongoing',
+    //   registeredUsers: []
+    // },
+    // {
+    //   id: 4,
+    //   title: 'Mobile App Development Hackathon',
+    //   description: 'Build a mobile app in 24 hours.',
+    //   location: 'Innovation Hub',
+    //   date: '2025-04-22',
+    //   time: '9:00 AM',
+    //   attendees: 15,
+    //   maxAttendees: 30,
+    //   status: 'approved',
+    //   registeredUsers: []
+    // },
+    // {
+    //   id: 5,
+    //   title: 'Blockchain Technology Seminar',
+    //   description: 'Learn about the latest in blockchain technology.',
+    //   location: 'Tech Campus',
+    //   date: '2025-03-18',
+    //   time: '2:00 PM',
+    //   attendees: 8,
+    //   maxAttendees: 25,
+    //   status: 'rejected',
+    //   registeredUsers: []
+    // },
+    // {
+    //   id: 6,
+    //   title: 'Digital Marketing Workshop',
+    //   description: 'Boost your digital marketing skills.',
+    //   location: 'Marketing Center',
+    //   date: '2025-02-10',
+    //   time: '10:00 AM',
+    //   attendees: 50,
+    //   maxAttendees: 50,
+    //   status: 'ended',
+    //   registeredUsers: []
+    // }
   ]);
 
+  useEffect(() => {
+    // Fetch events data from API
+    const fetchEvents = async () => {
+      try {
+        const res = await axiosInstance.get('/api/event',{
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          }
+        });
+        
+        setEvents(res.data);
+      } catch (err) {
+        setError("failed to fetch events");
+        console.error("error fetching events: ",err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchEvents();
+  }, []);
+  
   // State for modal
   const [showModal, setShowModal] = useState<boolean>(false);
   const [currentEvent, setCurrentEvent] = useState<EventFormState | null>(null);
@@ -124,9 +147,23 @@ const EventManagement: React.FC = () => {
     setShowModal(true);
   };
 
-  const deleteEvent = (id: number): void => {
+  const deleteEvent = async (id: number): Promise<void> => {
     if (window.confirm("Are you sure you want to delete this event?")) {
-      setEvents(events.filter(event => event.id !== id));
+      try {
+        const res = await axiosInstance.delete(`/api/event/${id}`,{
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          }
+        });
+        if (!res.status) {
+          throw new Error(res.data.message);
+        }
+        setEvents(events.filter(event => event.id !== id));
+      } catch (err) {
+        console.error("error deleting event: ", err);
+        setError("failed to delete event");
+        window.alert("Failed to delete event");
+      }
     }
   };
 
@@ -140,36 +177,69 @@ const EventManagement: React.FC = () => {
     });
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!currentEvent) {
 			// window.alert('Please Login');
 			return;
 		}
-    
-    if (currentEvent.id) {
-      // Update existing event
-      setEvents(events.map(event => 
-        event.id === currentEvent.id 
-          ? { 
-              ...event, 
-              ...currentEvent,
-              attendees: event.attendees // Preserve existing attendees
-            } 
-          : event
-      ));
-    } else {
-      // Create new event
-      const newEvent: Event = {
-        id: Math.max(...events.map(e => e.id)) + 1,
-        ...currentEvent,
-        attendees: 0,
-        registeredUsers: []
-      };
-      setEvents([...events, newEvent]);
+    try {
+      let res;
+      // if (currentEvent.id) {
+      //   // Update existing event
+      //   setEvents(events.map(event => 
+      //     event.id === currentEvent.id 
+      //       ? { 
+      //           ...event, 
+      //           ...currentEvent,
+      //           attendees: event.attendees // Preserve existing attendees
+      //         } 
+      //       : event
+      //   ));
+      // } else {
+      //   // Create new event
+      //   const newEvent: Event = {
+      //     id: Math.max(...events.map(e => e.id)) + 1,
+      //     ...currentEvent,
+      //     attendees: 0,
+      //     registeredUsers: []
+      //   };
+      //   setEvents([...events, newEvent]);
+      // }
+      if (currentEvent.id) {
+        // Update existing event
+        res = await axiosInstance.put(`/api/event/${currentEvent.id}`, JSON.stringify(currentEvent), {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        });
+      } else {
+        // Create new event
+        res = await axiosInstance.post('/api/event', JSON.stringify(currentEvent), {
+          headers: {
+            Authorization: `Bearer ${authToken}`
+          }
+        });
+      }
+      if (!res.status) {
+        throw new Error(res.data.message);
+      }
+      const updatedEvents = res.data;
+      if (currentEvent.id) {
+        setEvents(events.map(event => 
+          event.id === currentEvent.id 
+            ? updatedEvents
+            : event
+        ));
+      } else {
+        setEvents([...events, updatedEvents]);
+        }
+        setShowModal(false);
+    } catch (err) {
+      console.error("error saving event: ", err);
+      setError("failed to save event");
+      window.alert("Failed to update event");
     }
-    
-    setShowModal(false);
   };
 
   // Function to determine status badge color
@@ -183,7 +253,12 @@ const EventManagement: React.FC = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow">
@@ -374,6 +449,7 @@ const EventManagement: React.FC = () => {
                     <input
                       type="time"
                       name="time"
+                      step="900"
                       id="time"
                       value={currentEvent?.time || ''}
                       onChange={handleFormChange}

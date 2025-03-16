@@ -1,4 +1,4 @@
-const {createEvent,getEvents} = require("../controllers/event.controller");
+const {createEvent,getEvents, deleteEvent, updateEvent} = require("../controllers/event.controller");
 const roleMiddleware = require("../middleware/roleMiddleware");
 const verifyToken = require("../middleware/authMiddleware");
 module.exports = function(app) {
@@ -9,12 +9,21 @@ module.exports = function(app) {
         );
         next();
       });
+    //get all events  
+    app.get("/api/event", [verifyToken], getEvents);
+
+    //create an event
     app.post(
         "/api/event",
         [verifyToken, roleMiddleware(["organization", "admin"])],
         createEvent
     );
     
-    app.get("/api/event", [verifyToken], getEvents);
-  
+    //delete an event
+    app.delete("/api/event/:id", 
+      [verifyToken, roleMiddleware(["organization", "admin"])], deleteEvent);
+
+    //update an event
+    app.put("/api/event/:id", 
+      [verifyToken, roleMiddleware(["organization", "admin"])], updateEvent);
 }
