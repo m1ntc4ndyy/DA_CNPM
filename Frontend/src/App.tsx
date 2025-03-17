@@ -33,7 +33,6 @@ const App: React.FC = () => {
               </ProtectedRoute>
             } 
           />
-          
           {/* Admin-only route */}
           <Route 
             path="/manage" 

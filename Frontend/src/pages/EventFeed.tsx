@@ -219,19 +219,17 @@ const EventFeed: React.FC =  () => {
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 4;
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        
         const response = await axiosInstance.get('/api/event', {
           headers: {
             Authorization: `Bearer ${authToken}`
           }
         });
         setEvents(response.data as Event[]);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
       } finally {
@@ -353,7 +351,7 @@ const EventFeed: React.FC =  () => {
                         {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                       </span>
                       <Link to={`/events/${event.id}`} className="block">
-                        <h2 className="mt-2 text-xl font-semibold text-gray-900 origin-top-left transition-transform duration-200 hover:scale-110">{event.title}</h2>
+                        <h2 className="mt-2 text-xl font-semibold text-gray-900 origin-top-left transition-transform duration-200 hover:scale-110 hover:text-blue-600">{event.title}</h2>
                       </Link>
                     </div>
                     <button
@@ -367,7 +365,7 @@ const EventFeed: React.FC =  () => {
                       {isRegistered(event) ? 'Cancel Registration' : 'Register Now'}
                     </button>
                   </div>
-                  <p className="line-clamp-4 mt-3 text-base text-gray-500">{event.description}</p>
+                  <p className="line-clamp-4 mt-3 text-base text-gray-500 h-fu">{event.description}</p>
                   <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
                     <div className="flex items-center"><Calendar className="mr-1 h-4 w-4" />{event.date}</div>
                     {event.time && (<div className="flex items-center"><Clock className="mr-1 h-4 w-4" />{event.time}</div>)}

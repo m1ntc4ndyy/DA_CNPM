@@ -45,6 +45,12 @@ exports.getEvents = async (req, res) => {
   // return res.json(events);
 };
 
+exports.getEventById = async (req, res) => {
+  const { id } = req.params;
+  const event = await Event.findByPk(id);
+  if (!event) return res.status(404).json({ message: "Event not found" });
+  res.status(200).json(event);
+};
 
 exports.deleteEvent = async (req, res) => {
   const { id } = req.params;
