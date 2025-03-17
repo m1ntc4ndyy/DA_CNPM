@@ -5,6 +5,6 @@ const verifyToken = require("../middleware/authMiddleware");
 module.exports = function(app) {
 
     
-    app.post("/register", verifyToken, registerForEvent);
+    app.post("/api/register", verifyToken, registerForEvent);
   
 }

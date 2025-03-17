@@ -6,7 +6,7 @@ const sampleEvents: Event[] = [
   {
     id: 1,
     title: 'Web Development Workshop',
-    description: 'Learn React and Tailwind CSS.',
+    description: 'Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.Learn React and Tailwind CSS.',
     location: 'Tech Hub, Downtown',
     date: '2025-03-25',
     time: '10:00 AM - 2:00 PM',

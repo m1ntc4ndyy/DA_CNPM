@@ -288,10 +288,10 @@ const EventManagement: React.FC = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Date
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                     Location
                   </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                     Attendees
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -306,17 +306,20 @@ const EventManagement: React.FC = () => {
                 {events.map((event) => (
                   <tr key={event.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{event.title}</div>
+                      <div 
+                        className="text-sm font-medium text-gray-900 cursor-pointer hover:text-blue-600 origin-top-left hover:scale-105 transition-transform duration-200"
+                        onClick={() => openEditModal(event)}  
+                      >{event.title}</div>
                       <div className="text-sm text-gray-500 truncate max-w-xs">{event.description}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{new Date(event.date).toLocaleDateString()}</div>
                       <div className="text-sm text-gray-500">{event.time}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                       <div className="text-sm text-gray-900">{event.location}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
                       <div className="text-sm text-gray-900">
                         {event.attendees} / {event.maxAttendees}
                       </div>
@@ -471,8 +474,28 @@ const EventManagement: React.FC = () => {
 									className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
 								/>
 								</div>
+                <div>
+                  <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    id="status"
+                    value={currentEvent?.status || 'pending'}
+                    onChange={handleFormChange}
+                    required
+                    className="mt-1 block w-[30%] border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="ongoing">Ongoing</option>
+                    <option value="ended">Ended</option>
+                  </select>
+                </div>
+
             </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end mt-4">
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"

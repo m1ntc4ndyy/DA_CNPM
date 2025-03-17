@@ -217,7 +217,7 @@ const EventFeed: React.FC =  () => {
   const { currentUser, authToken, isAdmin, isStudent } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const eventsPerPage = 3;
+  const eventsPerPage = 4;
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(false);
   
@@ -245,6 +245,19 @@ const EventFeed: React.FC =  () => {
 
   const  toggleApply = async (id: number): Promise<void> => {
     if (!currentUser) return;
+    try {
+      const res = await axiosInstance.post(`/api/register`,{event_id: id} , {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        }
+      });
+      if (!res.status){
+        throw new Error('Failed to register for event');
+      }
+
+    } catch (error) {
+
+    }
     setEvents(
       events.map(event => {
         if (event.id === id) {
@@ -254,6 +267,7 @@ const EventFeed: React.FC =  () => {
             : [...event.registeredUsers, currentUser.id];
           
           return {
+
             ...event,
             registeredUsers: newRegisteredUsers,
             attendees: isApplied ? event.attendees - 1 : event.attendees + 1
@@ -321,7 +335,7 @@ const EventFeed: React.FC =  () => {
           </div>
         ) : (
 
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           {paginatedEvents.map(event => (
             <div key={event.id} className="bg-white rounded-lg shadow overflow-hidden">
               <div className="md:flex">
@@ -339,7 +353,7 @@ const EventFeed: React.FC =  () => {
                         {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                       </span>
                       <Link to={`/events/${event.id}`} className="block">
-                        <h2 className="mt-2 text-xl font-semibold text-gray-900 hover:underline">{event.title}</h2>
+                        <h2 className="mt-2 text-xl font-semibold text-gray-900 origin-top-left transition-transform duration-200 hover:scale-110">{event.title}</h2>
                       </Link>
                     </div>
                     <button
@@ -353,7 +367,7 @@ const EventFeed: React.FC =  () => {
                       {isRegistered(event) ? 'Cancel Registration' : 'Register Now'}
                     </button>
                   </div>
-                  <p className="mt-3 text-base text-gray-500">{event.description}</p>
+                  <p className="line-clamp-4 mt-3 text-base text-gray-500">{event.description}</p>
                   <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-500">
                     <div className="flex items-center"><Calendar className="mr-1 h-4 w-4" />{event.date}</div>
                     {event.time && (<div className="flex items-center"><Clock className="mr-1 h-4 w-4" />{event.time}</div>)}
