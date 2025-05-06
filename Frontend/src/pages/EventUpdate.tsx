@@ -59,10 +59,10 @@ export default function EventUpdate() {
 
       setEditedEvent(prev => ({
         ...prev!,
+        [name]: value,
         ...(name === "date" && { startDate: value }),
         ...(name === "time" && { startTime: value }),
-        ...(name === "capacity" && { capacity: parseInt(value) }),
-        
+
       }));
     }
 
@@ -83,7 +83,7 @@ export default function EventUpdate() {
         }
       );
       
-      setEvent(response.data.data.event || editedEvent);
+      setEvent(editedEvent);
       setIsEditing(false);
       showSuccessMessage('Event updated successfully!');
     } catch (error) {

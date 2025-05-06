@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 export default function EventManagementPage() {
-  const { currentUser, authToken, isAdmin, isStudent } = useAuth();
+  const { authToken } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [searchTerm, setSearchTerm] = useState("");

@@ -21,18 +21,6 @@ const UnauthorizedPage: React.FC = () => (
   </div>
 );
 
-const event = {
-  title: "Tech Innovators Meetup 2025",
-  description: "Join us for a gathering of the brightest minds in technology...",
-  image: "https://via.placeholder.com/800x400",
-  startDate: "2025-06-12",
-  startTime: "14:00",
-  location: "Tech Hall, San Francisco",
-  maxParticipants: 100,
-  currentParticipants: 45,
-  attendanceScore: 5,
-  onRegister: () => alert("Registered!"),
-}
 
 
 const App: React.FC = () => {
