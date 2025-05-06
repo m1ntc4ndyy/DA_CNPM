@@ -1,0 +1,100 @@
+import React from 'react';
+import { Link, useNavigate} from 'react-router-dom';
+import { useState, useRef } from 'react';
+import { useAuth } from '../context/AuthProvider';
+import { LogOut, User, Bell, Calendar, Search, Menu, X, MapPin } from 'lucide-react';
+
+const Navbar: React.FC = () => {
+  const { currentUser, isAdmin, handleLogout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const myRef = useRef<HTMLElement | null>(null);
+    const scrollTo = () => {
+      if (myRef.current) {
+        myRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    
+
+  const logout = (): void => {
+    handleLogout();
+    navigate('/login');
+  };
+
+  if (!currentUser) return null;
+
+  return (
+    <div>
+    {/* Header */}
+      <header className="bg-gradient-to-br from-indigo-500 to-purple-600 shadow text-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-2">
+              {/* <img src="/api/placeholder/50/50" alt="School Logo" className="h-10 w-10 rounded" /> */}
+              <h1 className="pl-5 text-3xl font-bold">EventHub</h1>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex sm:hidden items-center space-x-6">
+              {/* <a onClick={scrollTo}  href="#" className="hover:text-blue-200">Registration</a>
+              <a href="#" className="hover:text-blue-200">About</a>
+              <a href="#" className="hover:text-blue-200">Contact</a>
+              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded flex items-center">
+                <User className="w-4 h-4 mr-1" />
+                Login
+              </button> */}
+              <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                Events
+              </Link>
+              
+              {isAdmin() && (
+                  <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                    Manage
+                  </Link>
+              )}
+              <div className="flex items-center">
+                <div className="flex items-center mr-4">
+                  <User className="h-5 w-5 mr-1" />
+                  <span className="text-sm font-medium">
+                    {currentUser.name} ({currentUser.role})
+                  </span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800"
+                >
+                  <LogOut className="h-4 w-4 mr-1" />
+                  Logout
+                </button>
+              </div>
+            </nav>
+            
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden text-white"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+          
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden py-4 space-y-3">
+              <a href="#" className="block hover:text-blue-200 py-2">Calendar</a>
+              <a href="#" className="block hover:text-blue-200 py-2">Registration</a>
+              <a href="#" className="block hover:text-blue-200 py-2">About</a>
+              <a href="#" className="block hover:text-blue-200 py-2">Contact</a>
+              <button className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-left">
+                Login
+              </button>
+            </div>
+          )}
+        </div>
+    </header>
+  </div>
+  );
+};
+
+export default Navbar;
