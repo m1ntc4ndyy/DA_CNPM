@@ -199,14 +199,14 @@ export default function EventDetailsPage() {
                     <Calendar className="h-5 w-5 text-indigo-600 mr-2" />
                     <div>
                       <div className="text-sm text-gray-500">Date</div>
-                      <div className="font-medium">{eventData.startDate}</div>
+                      <div className="font-medium">{eventData.startDate.split("T")[0]}</div>
                     </div>
                   </div>
                   <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md mr-3 mb-3">
                     <Clock className="h-5 w-5 text-indigo-600 mr-2" />
                     <div>
                       <div className="text-sm text-gray-500">Time</div>
-                      <div className="font-medium">{eventData.startTime}</div>
+                      <div className="font-medium">{eventData.startTime.slice(0,5)}</div>
                     </div>
                   </div>
                   <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md mr-3 mb-3">

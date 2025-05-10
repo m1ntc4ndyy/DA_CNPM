@@ -1,6 +1,0 @@
-[x] datetime format date: dd/mm/yy, time: hh:mm AM||PM
-
-[] EventFeed
-    [] show all events
-    [] show event detail
-    [] registration

@@ -4,11 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import  AuthProvider  from './context/AuthProvider';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
-import EventFeed from './pages/EventFeed';
-import EventManagement from './pages/EventManagement';
 import Navbar from './components/Navbar';
-import EventDetails from './pages/EventDetails';
-import SchoolEventManagement from './pages/MainPage';
 import EventManagementPage from './pages/EventManagementPage';
 import Test from './pages/Test';
 import EventDetailsPage from './pages/event-details-page';
@@ -33,10 +29,6 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
-          {/* <Route path="/test" element={<SchoolEventManagement />} /> */}
-          {/* <Route path="/test2" element={<EventManagementPage />} /> */}
-          {/* <Route path="/test3" element={<Test/>} /> */}
-          {/* <Route path="/test4" element={<EventDetailsPage />} /> */}
           
           {/* Protected routes */}
           <Route 
