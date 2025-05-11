@@ -16,15 +16,16 @@ interface CategoryFilter {
 
 const categories: CategoryFilter[] = [
   { id: "all", name: "All Events", count: 5 },
-  { id: "music", name: "Music", count: 1 },
+  { id: "academic", name: "Academic", count: 1 },
   { id: "technology", name: "Technology", count: 1 },
   { id: "meeting", name: "Meeting", count: 1 },
   { id: "arts", name: "Arts", count: 1 },
-  { id: "sports", name: "Sports", count: 1 }
+  { id: "sports", name: "Sports", count: 1 },
+  { id: "other", name: "Other", count: 1 }, 
 ];
 
 export default function Test() {
-  const { currentUser, authToken, isAdmin, isStudent } = useAuth();
+  const {authToken } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [events, setEvents] = useState<Event[]>([]);
@@ -99,7 +100,7 @@ export default function Test() {
                   <div key={event.id} className="bg-white rounded-lg shadow overflow-hidden flex flex-col h-full">
                     <div className="relative">
                       <img
-                        src={event.image}
+                        src={event.image || "https://placehold.co/600x400"}
                         alt={event.title}
                         className="w-full h-48 object-cover"
                       />
