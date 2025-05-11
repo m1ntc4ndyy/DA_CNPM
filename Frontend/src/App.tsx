@@ -9,6 +9,7 @@ import EventManagementPage from './pages/EventManagementPage';
 import Test from './pages/Test';
 import EventDetailsPage from './pages/event-details-page';
 import EventUpdate from './pages/EventUpdate';
+import CreateEvent from './pages/CreateEvent';
 
 const UnauthorizedPage: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-screen">
@@ -45,7 +46,6 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute requiredRole="admin">
                 <EventManagementPage />
-                {/* <div>EVENT LIST</div> */}
               </ProtectedRoute>
             } 
           />
@@ -54,6 +54,14 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute requiredRole="admin">
                 <EventUpdate />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/events/create" 
+            element={
+              <ProtectedRoute requiredRole="admin">
+                <CreateEvent />
               </ProtectedRoute>
             } 
           />

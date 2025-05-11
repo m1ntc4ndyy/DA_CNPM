@@ -105,7 +105,7 @@ export default function Test() {
                         className="w-full h-48 object-cover"
                       />
                       <div className="absolute top-3 left-3">
-                        <span className="bg-gray-200 text-gray-800 px-2 py-1 text-xs rounded inline-block">
+                        <span className="bg-indigo-600 text-white px-3 py-1 text-sm rounded-full font-medium inline-block">
                           {event.category}
                         </span>
                       </div>

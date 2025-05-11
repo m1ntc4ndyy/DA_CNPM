@@ -152,6 +152,21 @@ export default function EventUpdate() {
     }
   };
 
+  const getStatusBadgeClasses = (status:string) => {
+    switch (status) {
+      case 'published':
+        return 'bg-green-100 text-green-800';
+      case 'draft':
+        return 'bg-gray-100 text-gray-800';
+      case 'canceled':
+        return 'bg-red-100 text-red-800';
+      case 'completed':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   if (isLoading && !event) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -184,7 +199,39 @@ export default function EventUpdate() {
       <header className="bg-white shadow">
         <div className="max-w-4xl mx-auto px-4 py-6 flex justify-end items-center">
           {!isEditing && event && (
+            
             <div className="flex space-x-3">
+              {event.status === "draft" && (
+                <button
+                onClick={async () => {
+                  if (!eventId) return;
+
+                  setIsLoading(true);
+                  try {
+                    await axiosInstance.post(
+                      `/api/events/${eventId}/publish`,
+                      {},
+                      {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                      }
+                    );
+                    showSuccessMessage('Event published successfully!');
+                    setEvent(prev => ({ ...prev!, status: 'published' }));
+                  } catch (error) {
+                    console.error('Error publishing event:', error);
+                    setErrorMessage('Failed to publish event. Please try again.');
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                disabled={isLoading || event?.status === 'published'}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Publish Event
+              </button>)}
+                
+              
               <button
                 onClick={() => setIsEditing(true)}
                 className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
@@ -333,7 +380,16 @@ export default function EventUpdate() {
                   </div>
                 </div>
                 
-                <div className="flex justify-end space-x-3 pt-5">
+                <div className="flex justify-end space-x-3 pt-5 ">
+                  <div className='flex justify-start w-[60%]'>
+                    <select name="status" id="status" className='border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'>
+                      <option value="draft" selected={editedEvent.status === 'draft'}>Draft</option>
+                      <option value="published" selected={editedEvent.status === 'published'}>Published</option>
+                      <option value="completed" selected={editedEvent.status === 'completed'}>Completed</option>
+                      <option value="canceled" selected={editedEvent.status === 'canceled'}>Canceled</option>
+
+                    </select>
+                  </div>
                   <button
                     type="button"
                     onClick={() => {
@@ -402,8 +458,8 @@ export default function EventUpdate() {
                       <h3 className="text-lg font-medium text-gray-900">Expected Attendees</h3>
                       <p className="text-gray-600">{event.capacity} people</p>
                     </div>
-                    <div className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
-                      Active
+                    <div className={`${getStatusBadgeClasses(event.status)} px-3 py-1 rounded-full text-sm font-medium`}>
+                      {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
                     </div>
                   </div>
                 </div>

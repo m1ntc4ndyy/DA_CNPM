@@ -18,6 +18,8 @@ import {
   Edit
 } from "lucide-react";
 
+
+
 export default function EventManagementPage() {
   const { authToken } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
@@ -69,6 +71,7 @@ export default function EventManagementPage() {
     
     setFilteredEvents(result);
   }, [events, statusFilter, searchTerm]);
+
 
   const handleCreateEvent = () => {
     // Navigate to create event page or open a modal

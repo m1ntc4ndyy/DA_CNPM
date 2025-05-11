@@ -37,13 +37,7 @@ const Navbar: React.FC = () => {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex sm:hidden items-center space-x-6">
-              {/* <a onClick={scrollTo}  href="#" className="hover:text-blue-200">Registration</a>
-              <a href="#" className="hover:text-blue-200">About</a>
-              <a href="#" className="hover:text-blue-200">Contact</a>
-              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded flex items-center">
-                <User className="w-4 h-4 mr-1" />
-                Login
-              </button> */}
+            
               <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                 Events
               </Link>
@@ -52,7 +46,11 @@ const Navbar: React.FC = () => {
                   <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                     Manage
                   </Link>
+
               )}
+              <Link to="events/create" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                create
+              </Link>
               <div className="flex items-center">
                 <div className="flex items-center mr-4">
                   <User className="h-5 w-5 mr-1" />

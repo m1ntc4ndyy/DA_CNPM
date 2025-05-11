@@ -145,7 +145,18 @@ export default function EventDetailsPage() {
       console.error(error);
     }
   };
- 
+
+  const formatDateTime = (date:string) => {
+    return new Date(`${date}`).toLocaleString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      // hour: 'numeric',
+      // minute: '2-digit'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main content */}
@@ -157,7 +168,7 @@ export default function EventDetailsPage() {
             <div className="bg-white rounded-lg shadow-md mb-8">
               <div className="relative">
                 <img 
-                  src={eventData.image} 
+                  src={eventData.image || 'https://placehold.co/600x400'} 
                   alt={eventData.title} 
                   className="w-full h-80 object-cover rounded-t-lg"
                 />
@@ -199,7 +210,14 @@ export default function EventDetailsPage() {
                     <Calendar className="h-5 w-5 text-indigo-600 mr-2" />
                     <div>
                       <div className="text-sm text-gray-500">Date</div>
-                      <div className="font-medium">{eventData.startDate.split("T")[0]}</div>
+                      <div className="font-medium">{formatDateTime(eventData.startDate)}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md mr-3 mb-3">
+                    <Calendar className="h-5 w-5 text-indigo-600 mr-2" />
+                    <div>
+                      <div className="text-sm text-gray-500">Registration Deadline</div>
+                      <div className="font-medium">{formatDateTime(eventData.registrationDeadline)}</div>
                     </div>
                   </div>
                   <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md mr-3 mb-3">
@@ -216,6 +234,8 @@ export default function EventDetailsPage() {
                       <div className="font-medium">{eventData.location}</div>
                     </div>
                   </div>
+                  <div className='w-full'></div>
+                  
                 </div>
               </div>
 
@@ -444,7 +464,9 @@ export default function EventDetailsPage() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     rows={4}
                   ></textarea>
-                  <button className="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                  <button className="mt-3 bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition"
+                    onClick={() => window.alert('Function not available!')}
+                  >
                     Send Message
                   </button>
                 </div>
