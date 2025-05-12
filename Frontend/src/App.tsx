@@ -10,6 +10,7 @@ import Test from './pages/Test';
 import EventDetailsPage from './pages/event-details-page';
 import EventUpdate from './pages/EventUpdate';
 import CreateEvent from './pages/CreateEvent';
+import StudentProfile from './pages/StudentProfile';
 
 const UnauthorizedPage: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-screen">
@@ -30,13 +31,20 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
-          
           {/* Protected routes */}
           <Route 
             path="/" 
             element={
               <ProtectedRoute>
                 <Test />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element= {
+              <ProtectedRoute>
+                <StudentProfile/>
               </ProtectedRoute>
             } 
           />

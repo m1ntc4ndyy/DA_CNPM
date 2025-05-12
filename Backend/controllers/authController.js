@@ -117,3 +117,31 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+
+exports.getProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming you have middleware to set req.user
+    const user = await User.findByPk(userId, {
+      attributes: { exclude: ['password'] } // Exclude password from response
+    });
+    
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      });
+    }
+    
+    return res.status(200).json({
+      status: 'success',
+      data: user
+    });
+  } catch (error) {
+    console.error('Get profile error:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while fetching the profile'
+    });
+  }
+}

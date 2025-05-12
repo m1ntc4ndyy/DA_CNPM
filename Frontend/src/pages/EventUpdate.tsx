@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, Clock, MapPin, User, Edit, Trash, X, Save, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Edit, Trash, X, Save, AlertCircle, Users, Award } from 'lucide-react';
 import { Event } from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
@@ -378,6 +378,17 @@ export default function EventUpdate() {
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     />
                   </div>
+                  <div>
+                    <label htmlFor="point" className="block text-sm font-medium text-gray-700">Points</label>
+                    <input
+                      type="number"
+                      name="point"
+                      id="point"
+                      value={editedEvent.point || 0}
+                      onChange={handleChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    />
+                  </div>
                 </div>
                 
                 <div className="flex justify-end space-x-3 pt-5 ">
@@ -418,14 +429,19 @@ export default function EventUpdate() {
                 </div>
               </div>
             ) : event ? (
-              <div>
+              <div className="relative">
+                <div className='flex justify-end'>
+                <div className={`${getStatusBadgeClasses(event.status)} px-3 py-1 rounded-full text-lg font-medium`}>
+                      {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                </div>
+
+                </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">{event.title}</h2>
-                
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mb-8">
                   <div className="flex items-center">
                     <Calendar className="h-5 w-5 text-indigo-500 mr-2" />
                     <span className="text-gray-600">Start Date: </span>
-                    <span className="ml-2 text-gray-900 font-medium">{event.startDate.split("T")[0]}</span>
+                    <span className="ml-2 text-gray-900 font-medium">{formatDisplayDate(event.startDate)}</span>
                   </div>
                   
                   <div className="flex items-center">
@@ -445,23 +461,21 @@ export default function EventUpdate() {
                     <span className="text-gray-600">Organizer: </span>
                     <span className="ml-2 text-gray-900 font-medium">{event.organizer.name}</span>
                   </div>
+                  <div className="flex items-center">
+                    <Users className="h-5 w-5 text-indigo-500 mr-2" />
+                    <span className="text-gray-600">Capacity: </span>
+                    <span className="ml-2 text-gray-900 font-medium">{event.capacity} people</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Award className="h-5 w-5 text-indigo-500 mr-2" />
+                    <span className="text-gray-600">Point: </span>
+                    <span className="ml-2 text-gray-900 font-medium">{event.point} Points</span>
+                  </div>
                 </div>
                 
                 <div className="mb-8">
                   <h3 className="text-lg font-medium text-gray-900 mb-2">About This Event</h3>
                   <p className="text-gray-700 whitespace-pre-line">{event.description}</p>
-                </div>
-                
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">Expected Attendees</h3>
-                      <p className="text-gray-600">{event.capacity} people</p>
-                    </div>
-                    <div className={`${getStatusBadgeClasses(event.status)} px-3 py-1 rounded-full text-sm font-medium`}>
-                      {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
-                    </div>
-                  </div>
                 </div>
               </div>
             ) : (

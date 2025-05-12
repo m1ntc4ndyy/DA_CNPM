@@ -306,6 +306,7 @@
 									"    pm.response.to.have.status(201);\r",
 									"    pm.expect(pm.response.json().status).to.be.eql(\"success\");\r",
 									"    pm.expect(pm.response.json().message).to.be.eql(\"Event created successfully\");\r",
+									"    pm.environment.set(\"event_id\", pm.response.json().data.id);\r",
 									"\r",
 									"});\r",
 									""
@@ -330,7 +331,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Basketball Tournament\",\r\n    \"description\": \"The Annual Basketball Tournament promises to be an exciting showcase of athletic talent, sportsmanship, and team spirit. Teams from different faculties and departments will face off in a thrilling knockout competition, battling for the coveted championship trophy. Each game will be played under professional rules and officiated by certified referees to ensure fair play and an exhilarating experience for both players and spectators.\\n\\nBeyond the court, the tournament aims to foster a sense of community and camaraderie among students, encouraging healthy competition and mutual respect. In addition to the championship title, awards for the Most Valuable Player (MVP) and Best Defensive Player will be presented at the closing ceremony. Everyone is invited to cheer for their favorite teams and be part of the vibrant energy that makes this event one of the most anticipated of the year.\",\r\n    \"location\": \"University Sports Complex\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"10:00:00\",\r\n    \"score\": \"8\",\r\n    \"capacity\": 16,\r\n    \"category\": \"Sports\"\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Basketball Tournament\",\r\n    \"description\": \"The Annual Basketball Tournament promises to be an exciting showcase of athletic talent, sportsmanship, and team spirit. Teams from different faculties and departments will face off in a thrilling knockout competition, battling for the coveted championship trophy. Each game will be played under professional rules and officiated by certified referees to ensure fair play and an exhilarating experience for both players and spectators.\\n\\nBeyond the court, the tournament aims to foster a sense of community and camaraderie among students, encouraging healthy competition and mutual respect. In addition to the championship title, awards for the Most Valuable Player (MVP) and Best Defensive Player will be presented at the closing ceremony. Everyone is invited to cheer for their favorite teams and be part of the vibrant energy that makes this event one of the most anticipated of the year.\",\r\n    \"location\": \"University Sports Complex\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"10:00:00\",\r\n    \"point\": \"8\",\r\n    \"capacity\": 16,\r\n    \"category\": \"Sports\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -360,7 +361,7 @@
 									"    pm.response.to.have.status(201);\r",
 									"    pm.expect(pm.response.json().status).to.be.eql(\"success\");\r",
 									"    pm.expect(pm.response.json().message).to.be.eql(\"Event created successfully\");\r",
-									"\r",
+									"    pm.environment.set(\"test_event_id\", pm.response.json().data.id);\r",
 									"});\r",
 									""
 								],
@@ -384,7 +385,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Basketball Tournament\",\r\n    \"description\": \"The Annual Basketball Tournament promises to be an exciting showcase of athletic talent, sportsmanship, and team spirit. Teams from different faculties and departments will face off in a thrilling knockout competition, battling for the coveted championship trophy. Each game will be played under professional rules and officiated by certified referees to ensure fair play and an exhilarating experience for both players and spectators.\\n\\nBeyond the court, the tournament aims to foster a sense of community and camaraderie among students, encouraging healthy competition and mutual respect. In addition to the championship title, awards for the Most Valuable Player (MVP) and Best Defensive Player will be presented at the closing ceremony. Everyone is invited to cheer for their favorite teams and be part of the vibrant energy that makes this event one of the most anticipated of the year.\",\r\n    \"location\": \"University Sports Complex\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"10:00:00\",\r\n    \"score\": \"8\",\r\n    \"capacity\": 16,\r\n    \"category\": \"Sports\"\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Basketball Tournament\",\r\n    \"description\": \"The Annual Basketball Tournament promises to be an exciting showcase of athletic talent, sportsmanship, and team spirit. Teams from different faculties and departments will face off in a thrilling knockout competition, battling for the coveted championship trophy. Each game will be played under professional rules and officiated by certified referees to ensure fair play and an exhilarating experience for both players and spectators.\\n\\nBeyond the court, the tournament aims to foster a sense of community and camaraderie among students, encouraging healthy competition and mutual respect. In addition to the championship title, awards for the Most Valuable Player (MVP) and Best Defensive Player will be presented at the closing ceremony. Everyone is invited to cheer for their favorite teams and be part of the vibrant energy that makes this event one of the most anticipated of the year.\",\r\n    \"location\": \"University Sports Complex\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"10:00:00\",\r\n    \"point\": \"8\",\r\n    \"capacity\": 16,\r\n    \"category\": \"Sports\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -438,7 +439,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Annual Art Exhibition\",\r\n    \"description\": \"The Annual Art Exhibition celebrates the extraordinary creativity and innovation of our student artists. Featuring works across a variety of mediums—including painting, sculpture, photography, digital art, and mixed media installations—the exhibition transforms the campus art gallery into a vibrant space of imagination and cultural expression. Students will have the opportunity to display their creations to peers, faculty, and external visitors, fostering a deeper appreciation for the arts within our academic community.\\n\\nThroughout the week, additional activities such as artist talks, live demonstrations, and interactive workshops will take place to enhance the experience. Special recognitions will be awarded for outstanding pieces, as judged by a panel of established artists and curators. Whether you are an artist, an art enthusiast, or simply curious, the Annual Art Exhibition promises to inspire, challenge, and ignite your creative spirit.\",\r\n    \"location\": \"Art Gallery\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"10:00:00\",\r\n    \"score\": \"9\",\r\n    \"capacity\": 200,\r\n    \"category\": \"Arts\"\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Annual Art Exhibition\",\r\n    \"description\": \"The Annual Art Exhibition celebrates the extraordinary creativity and innovation of our student artists. Featuring works across a variety of mediums—including painting, sculpture, photography, digital art, and mixed media installations—the exhibition transforms the campus art gallery into a vibrant space of imagination and cultural expression. Students will have the opportunity to display their creations to peers, faculty, and external visitors, fostering a deeper appreciation for the arts within our academic community.\\n\\nThroughout the week, additional activities such as artist talks, live demonstrations, and interactive workshops will take place to enhance the experience. Special recognitions will be awarded for outstanding pieces, as judged by a panel of established artists and curators. Whether you are an artist, an art enthusiast, or simply curious, the Annual Art Exhibition promises to inspire, challenge, and ignite your creative spirit.\",\r\n    \"location\": \"Art Gallery\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"10:00:00\",\r\n    \"point\": \"9\",\r\n    \"capacity\": 200,\r\n    \"category\": \"Arts\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -492,7 +493,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Career Development Workshop\",\r\n    \"description\": \"The Career Development Workshop is tailored to equip students with the practical tools and strategies they need to succeed in the competitive job market. Participants will engage in intensive sessions covering topics such as resume and cover letter writing, personal branding, interview techniques, and effective networking. Led by experienced career coaches and industry professionals, the workshop will provide actionable advice, real-world case studies, and hands-on practice opportunities.\\n\\nIn addition to formal training, attendees will participate in mock interviews and receive personalized resume reviews, gaining critical feedback to sharpen their professional profiles. This workshop is an essential stepping stone for any student preparing for internships, graduate opportunities, or full-time positions. By the end of the event, students will leave with greater confidence, polished application materials, and a clearer vision for their career path.\",\r\n    \"location\": \"Room 202, Business Block\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"13:00:00\",\r\n    \"score\": \"7\",\r\n    \"capacity\": 50,\r\n    \"category\": \"Academic\"\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Career Development Workshop\",\r\n    \"description\": \"The Career Development Workshop is tailored to equip students with the practical tools and strategies they need to succeed in the competitive job market. Participants will engage in intensive sessions covering topics such as resume and cover letter writing, personal branding, interview techniques, and effective networking. Led by experienced career coaches and industry professionals, the workshop will provide actionable advice, real-world case studies, and hands-on practice opportunities.\\n\\nIn addition to formal training, attendees will participate in mock interviews and receive personalized resume reviews, gaining critical feedback to sharpen their professional profiles. This workshop is an essential stepping stone for any student preparing for internships, graduate opportunities, or full-time positions. By the end of the event, students will leave with greater confidence, polished application materials, and a clearer vision for their career path.\",\r\n    \"location\": \"Room 202, Business Block\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"13:00:00\",\r\n    \"point\": \"7\",\r\n    \"capacity\": 50,\r\n    \"category\": \"Academic\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -546,7 +547,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Student Council Meeting\",\r\n    \"description\": \"The monthly Student Council Meeting provides an essential forum for student leaders to discuss current issues, review project updates, and plan future activities. Members from each department and club will come together to share progress reports, vote on funding proposals, and brainstorm new initiatives aimed at enhancing campus life. Clear communication and active participation are expected from all council members to ensure effective decision-making.\\n\\nThis meeting also offers an opportunity for members to raise new student concerns, propose changes to existing policies, and strengthen collaboration between different student organizations. All discussions will be formally recorded in meeting minutes and shared with the wider student body. If you are a council member or a student with a proposal or concern, your voice matters—get involved and help shape the future of our campus community.\",\r\n    \"location\": \"Conference Room A\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"15:00:00\",\r\n    \"score\": \"6\",\r\n    \"capacity\": 30,\r\n    \"category\": \"Meeting\"\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Student Council Meeting\",\r\n    \"description\": \"The monthly Student Council Meeting provides an essential forum for student leaders to discuss current issues, review project updates, and plan future activities. Members from each department and club will come together to share progress reports, vote on funding proposals, and brainstorm new initiatives aimed at enhancing campus life. Clear communication and active participation are expected from all council members to ensure effective decision-making.\\n\\nThis meeting also offers an opportunity for members to raise new student concerns, propose changes to existing policies, and strengthen collaboration between different student organizations. All discussions will be formally recorded in meeting minutes and shared with the wider student body. If you are a council member or a student with a proposal or concern, your voice matters—get involved and help shape the future of our campus community.\",\r\n    \"location\": \"Conference Room A\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"15:00:00\",\r\n    \"point\": \"6\",\r\n    \"capacity\": 30,\r\n    \"category\": \"Meeting\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -600,7 +601,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Photography Contest\",\r\n    \"description\": \"The Photography Contest invites all students to capture and share their interpretation of this year’s theme: 'Moments of Joy.' Whether through portraits, landscapes, candid snapshots, or abstract imagery, participants are encouraged to creatively explore what happiness looks like through the lens. Photographs must be original work and submitted digitally by the registration deadline for consideration.\\n\\nA panel of professional photographers and faculty members will judge entries based on creativity, technical quality, and emotional impact. Winning photographs will be awarded certificates and showcased in an online gallery as well as printed exhibits across campus. This contest is an opportunity to build your artistic portfolio, gain recognition, and celebrate the beauty of everyday moments through photography.\",\r\n    \"location\": \"Online Submission\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"00:00:00\",\r\n    \"score\": \"8\",\r\n    \"capacity\": 100,\r\n    \"category\": \"Other\"\r\n}\r\n",
+							"raw": "{\r\n    \"title\": \"Photography Contest\",\r\n    \"description\": \"The Photography Contest invites all students to capture and share their interpretation of this year’s theme: 'Moments of Joy.' Whether through portraits, landscapes, candid snapshots, or abstract imagery, participants are encouraged to creatively explore what happiness looks like through the lens. Photographs must be original work and submitted digitally by the registration deadline for consideration.\\n\\nA panel of professional photographers and faculty members will judge entries based on creativity, technical quality, and emotional impact. Winning photographs will be awarded certificates and showcased in an online gallery as well as printed exhibits across campus. This contest is an opportunity to build your artistic portfolio, gain recognition, and celebrate the beauty of everyday moments through photography.\",\r\n    \"location\": \"Online Submission\",\r\n    \"startDate\": \"2025-10-01\",\r\n    \"registrationDeadline\": \"2025-10-01\",\r\n    \"startTime\": \"00:00:00\",\r\n    \"point\": \"8\",\r\n    \"capacity\": 100,\r\n    \"category\": \"Other\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -679,7 +680,7 @@
 								"exec": [
 									"pm.test(\"get event by id\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"    var temp = pm.environment.get(\"test_event_id\")\r",
+									"    var temp = pm.environment.get(\"event_id\")\r",
 									"    pm.expect(pm.response.json().data.event.id).to.be.eql(temp);\r",
 									"});\r",
 									"\r",
@@ -1059,6 +1060,34 @@
 								"registrations",
 								"{{event_id}}",
 								"unregister"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{student_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"profile"
 							]
 						}
 					},

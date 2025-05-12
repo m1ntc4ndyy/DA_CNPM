@@ -48,8 +48,8 @@ const Navbar: React.FC = () => {
                   </Link>
 
               )}
-              <Link to="events/create" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
-                create
+              <Link to="/profile" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                Profile
               </Link>
               <div className="flex items-center">
                 <div className="flex items-center mr-4">

@@ -17,7 +17,12 @@ const app = express();
 
 // Apply security middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: '*', // for dev only — use your frontend URL in prod
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  
+}));
 app.use(morgan('dev'));
 
 // Apply rate limiting

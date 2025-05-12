@@ -14,6 +14,7 @@ export interface Event {
   startDate: string;
   startTime: string;
   registrationDeadline: string;
+  point: number;
   image?: string;
   status: 'completed' | 'draft' | 'published' | 'canceled';
   capacity: number;

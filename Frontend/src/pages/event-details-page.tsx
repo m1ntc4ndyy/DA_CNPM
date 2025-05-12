@@ -13,7 +13,7 @@ interface ExtendedEvent extends Event {
     phone: string;
   };
   isRegistered: boolean;
-  hasAttendec: boolean;
+  hasAttended: boolean;
 }
 
 
@@ -32,7 +32,8 @@ import {
   Mail, 
   Globe, 
   MessageCircle,
-  AlertCircle
+  AlertCircle,
+  Award
 } from 'lucide-react';
 
 
@@ -45,35 +46,6 @@ interface RelatedEvent {
   category: string;
   image: string;
 }
-
-
-// Sample related events
-const relatedEvents: RelatedEvent[] = [
-  {
-    id: 2,
-    title: "Jazz in the Park",
-    date: "June 22, 2025",
-    location: "Central Park",
-    category: "Music",
-    image: "/api/placeholder/400/250"
-  },
-  {
-    id: 3,
-    title: "Rock Concert Series",
-    date: "June 28, 2025",
-    location: "Madison Square Garden",
-    category: "Music",
-    image: "/api/placeholder/400/250"
-  },
-  {
-    id: 4,
-    title: "Electronic Music Night",
-    date: "July 5, 2025",
-    location: "Warehouse Club",
-    category: "Music",
-    image: "/api/placeholder/400/250"
-  }
-];
 
 export default function EventDetailsPage() {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -234,6 +206,15 @@ export default function EventDetailsPage() {
                       <div className="font-medium">{eventData.location}</div>
                     </div>
                   </div>
+                  <div>
+                    <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md mr-3 mb-3">
+                      <Award className="h-5 w-5 text-indigo-600 mr-2" />
+                      <div>
+                        <div className="text-sm text-gray-500">Point</div>
+                        <div className="font-medium">{eventData.point}</div>
+                      </div>
+                    </div>
+                  </div>
                   <div className='w-full'></div>
                   
                 </div>
@@ -288,80 +269,8 @@ export default function EventDetailsPage() {
                     </p>
                   ))}
                 </div>
-
-                {/* Tags */}
-                {/* <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-2">Tags</h3>
-                  <div className="flex flex-wrap">
-                    {eventData.tags.map((tag, index) => (
-                      <span 
-                        key={index} 
-                        className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm mr-2 mb-2"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div> */}
-
-                {/* Schedule */}
-                {/* <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-4">Event Schedule</h3>
-                  <div className="space-y-4">
-                    {displayedSchedule.map((item, index) => (
-                      <div key={index} className="flex items-start">
-                        <div className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded font-medium w-24 text-center flex-shrink-0">
-                          {item.time}
-                        </div>
-                        <div className="ml-4 pt-1">{item.activity}</div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {eventData.schedule.length > 4 && (
-                    <button 
-                      className="mt-4 text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center"
-                      onClick={() => setShowAllSchedule(!showAllSchedule)}
-                    >
-                      {showAllSchedule ? 'Show Less' : 'Show Full Schedule'}
-                      <ChevronLeft className={`h-4 w-4 ml-1 transform ${showAllSchedule ? 'rotate-90' : '-rotate-90'}`} />
-                    </button>
-                  )}
-                </div> */}
               </div>
             </div>
-
-            {/* Related Events */}
-            {/* <div className="bg-white rounded-lg shadow-md">
-              <div className="px-6 py-6">
-                <h2 className="text-xl font-bold mb-4">Similar Events You May Like</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {relatedEvents.map((event) => (
-                    <div key={event.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                      <img 
-                        src={event.image}
-                        alt={event.title}
-                        className="w-full h-32 object-cover"
-                      />
-                      <div className="p-3">
-                        <span className="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded">
-                          {event.category}
-                        </span>
-                        <h3 className="font-medium mt-2 text-sm line-clamp-2">{event.title}</h3>
-                        <div className="flex items-center text-xs text-gray-500 mt-2">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          <span>{event.date}</span>
-                        </div>
-                        <div className="flex items-center text-xs text-gray-500 mt-1">
-                          <MapPin className="h-3 w-3 mr-1" />
-                          <span>{event.location}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div> */}
           </div>
 
           {/* Sidebar - Takes 1 column on large screens */}

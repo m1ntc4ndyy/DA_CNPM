@@ -14,7 +14,7 @@ export default function CreateEvent() {
         location: "",
         description: "",
         capacity: 0,
-        score: 0,
+        point: 0,
     });
     const [isLoading, setIsLoading] = useState(false);
 
@@ -157,12 +157,12 @@ export default function CreateEvent() {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="score" className="block text-sm font-medium text-gray-700">Score</label>
+                                <label htmlFor="point" className="block text-sm font-medium text-gray-700">Point</label>
                                 <input
                                     type="number"
-                                    name="score"
-                                    id="score"
-                                    value={formData.score}
+                                    name="point"
+                                    id="point"
+                                    value={formData.point}
                                     onChange={handleChange}
                                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                 />
@@ -179,7 +179,7 @@ export default function CreateEvent() {
                                     startTime: "",
                                     registrationDeadline: "",
                                     category: "",
-                                    score: 0,
+                                    point: 0,
                                     location: "",
                                     description: "",
                                     capacity: 0,

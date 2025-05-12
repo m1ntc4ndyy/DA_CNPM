@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true
       },
-      score : {
+      point : {
         type: DataTypes.FLOAT,
         allowNull: true
       },

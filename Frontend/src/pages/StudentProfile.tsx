@@ -1,19 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { User, Award, Calendar, CheckCircle, Clock, ChevronRight, Mail, Phone, MapPin, School } from 'lucide-react';
-
+import axiosInstance  from '../utils/axiosInstance';
+import { useAuth } from '../context/AuthProvider';
 const StudentProfile = () => {
-  // Mock data - would come from API in a real app
+  const { authToken} = useAuth();
+
+
   const [student, setStudent] = useState({
-    id: '123456',
-    name: 'Alex Johnson',
-    email: 'alex.johnson@school.edu',
-    phone: '(555) 123-4567',
-    department: 'Computer Science',
-    year: '3rd Year',
-    totalPoints: 185,
+    id: '',
+    name: '',
+    email: '',
+    phone: '',
+    department: '',
+    year: '',
+    point: 0,
     profileImage: null
   });
-  
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const res = await axiosInstance.get('/api/auth/profile',{
+          headers: {
+            'Authorization': `Bearer ${authToken}`
+          }
+        });
+        setStudent(res.data.data);
+        console.log(res.data.data);
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    }
+    fetchProfileData();
+  }, []);
+
+
   const [registeredEvents, setRegisteredEvents] = useState([
     {
       id: 1,

@@ -30,7 +30,7 @@ exports.createEvent = async (req, res) => {
       startTime,
       registrationDeadline,
       capacity,
-      score,
+      point,
       category,
       isPublic
     } = req.body;
@@ -53,7 +53,7 @@ exports.createEvent = async (req, res) => {
       registrationDeadline,
       capacity,
       category,
-      score,
+      point,
       isPublic: isPublic !== undefined ? isPublic : true,
       organizerId: req.user.id,
       status: 'draft'
@@ -245,14 +245,14 @@ exports.getEventById = async (req, res) => {
     
     
     // Check if the authenticated user is registered for this event
-    if (req.user && req.user.role === 'student') {
+    if (req.user &&( req.user.role === 'student' || req.user.role === 'admin')) {
       const registration = await Registration.findOne({
         where: {
           userId: req.user.id,
           eventId
         }
       });
-      
+      console.log('Registration:', registration);
       event.dataValues.isRegistered = !!registration;
       if (registration) {
         event.dataValues.registrationStatus = registration.status;
