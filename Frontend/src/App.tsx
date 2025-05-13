@@ -6,11 +6,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import Navbar from './components/Navbar';
 import EventManagementPage from './pages/EventManagementPage';
-import Test from './pages/Test';
-import EventDetailsPage from './pages/event-details-page';
+import EventDetailsPage from './pages/EventDetailPage';
 import EventUpdate from './pages/EventUpdate';
 import CreateEvent from './pages/CreateEvent';
 import StudentProfile from './pages/StudentProfile';
+import MainPage from './pages/MainPage';
+import Temp from './pages/temp';
 
 const UnauthorizedPage: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-screen">
@@ -31,12 +32,13 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
+          <Route path="/temp" element={<Temp/>} />
           {/* Protected routes */}
           <Route 
             path="/" 
             element={
               <ProtectedRoute>
-                <Test />
+                <MainPage />
               </ProtectedRoute>
             } 
           />

@@ -160,13 +160,14 @@ exports.getUserRegistrations = async (req, res) => {
         {
           model: Event,
           as: 'event',
-          include: [
-            {
-              model: User,
-              as: 'organizer',
-              attributes: ['id', 'name', 'email']
-            }
-          ]
+          attributes: ['id', 'title', 'point'],
+          // include: [
+          //   {
+          //     model: User,
+          //     as: 'organizer',
+          //     attributes: ['id', 'name', 'email']
+          //   }
+          // ]
         }
       ]
       // ,

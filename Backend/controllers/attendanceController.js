@@ -47,7 +47,6 @@ exports.checkIn = async (req, res) => {
       where: {
         userId,
         eventId: event.id,
-        status: 'approved'
       }
     });
     
@@ -218,13 +217,14 @@ exports.getUserAttendance = async (req, res) => {
         {
           model: Event,
           as: 'event',
-          include: [
-            {
-              model: User,
-              as: 'organizer',
-              attributes: ['id', 'name', 'email']
-            }
-          ]
+          attributes: ['id', 'title', 'point'],
+          // include: [
+          //   {
+          //     model: User,
+          //     as: 'organizer',
+          //     attributes: ['id', 'name', 'email']
+          //   }
+          // ]
         }
       ],
       order: [['checkInTime', 'DESC']]

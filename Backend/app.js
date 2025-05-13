@@ -17,21 +17,16 @@ const app = express();
 
 // Apply security middleware
 app.use(helmet());
-app.use(cors({
-  origin: '*', // for dev only — use your frontend URL in prod
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  
-}));
+app.use(cors());
 app.use(morgan('dev'));
 
 // Apply rate limiting
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 100, // limit each IP to 100 requests per windowMs
-//   message: 'Too many requests from this IP, please try again later.'
-// });
-// app.use('/api/', limiter);
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use('/api/', limiter);
 
 // Parse JSON bodies
 app.use(bodyParser.json());
@@ -42,7 +37,7 @@ app.use('/api/auth', authRoutes);
 // app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
-app.use('/api/attendance', attendanceRoutes);
+app.use('/api/attendances', attendanceRoutes);
 app.use('/api/qr', qrRoutes);
 
 // Error handling middleware

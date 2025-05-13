@@ -1,20 +1,14 @@
 import React from 'react';
 import { Link, useNavigate} from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useState} from 'react';
 import { useAuth } from '../context/AuthProvider';
-import { LogOut, User, Bell, Calendar, Search, Menu, X, MapPin } from 'lucide-react';
+import { LogOut, User, Menu, X } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const { currentUser, isAdmin, handleLogout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const myRef = useRef<HTMLElement | null>(null);
-    const scrollTo = () => {
-      if (myRef.current) {
-        myRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
-    };
     
 
   const logout = (): void => {
@@ -31,8 +25,11 @@ const Navbar: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
-              {/* <img src="/api/placeholder/50/50" alt="School Logo" className="h-10 w-10 rounded" /> */}
-              <h1 className="pl-5 text-3xl font-bold">EventHub</h1>
+              <h1 className="pl-5 text-3xl font-bold">
+                <Link to="/">
+                  EventHub
+                </Link>
+              </h1>
             </div>
             
             {/* Desktop Navigation */}

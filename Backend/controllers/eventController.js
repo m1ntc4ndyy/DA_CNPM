@@ -252,7 +252,6 @@ exports.getEventById = async (req, res) => {
           eventId
         }
       });
-      console.log('Registration:', registration);
       event.dataValues.isRegistered = !!registration;
       if (registration) {
         event.dataValues.registrationStatus = registration.status;
