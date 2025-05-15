@@ -56,7 +56,7 @@ const StudentProfile = () => {
     fetchProfileData();
     const fetchRegisteredEvents = async () => {
       try {
-        const res = await axiosInstance.get('/api/registrations/my-registrations', {
+        const res = await axiosInstance.get('/api/registrations/my-registrations?withAttended=false', {
           headers: {
             'Authorization': `Bearer ${authToken}`
           }

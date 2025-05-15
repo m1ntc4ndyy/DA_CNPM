@@ -50,7 +50,7 @@ exports.generateEventQR = async (req, res) => {
     
     // Generate QR code image
     const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    const qrData = `${baseUrl}/api/attendance/check-in/${code}`;
+    const qrData = `${baseUrl}/api/attendances/check-in/${code}`;
     const qrDataURL = await qrGenerator.generateQRCodeDataURL(qrData);
     
     return res.status(201).json({

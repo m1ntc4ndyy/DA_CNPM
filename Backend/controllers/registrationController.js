@@ -1,4 +1,4 @@
-const { Event, Registration, User, sequelize } = require('../models');
+const { Event, Registration, Attendance } = require('../models');
 const { Op } = require('sequelize');
 
 // Register for an event
@@ -153,36 +153,63 @@ exports.unregisterFromEvent = async (req, res) => {
 exports.getUserRegistrations = async (req, res) => {
   try {
     const userId = req.user.id;
-    
-    const registrations = await Registration.findAll({
-      where: { userId },
-      include: [
-        {
-          model: Event,
-          as: 'event',
-          attributes: ['id', 'title', 'point'],
-          // include: [
-          //   {
-          //     model: User,
-          //     as: 'organizer',
-          //     attributes: ['id', 'name', 'email']
-          //   }
-          // ]
-        }
-      ]
-      // ,
-      // order: [
-      //   [sequelize.literal(`CASE WHEN "event"."startDate" >= NOW() THEN 0 ELSE 1 END`), 'ASC'],
-      //   [{ model: Event, as: 'event' }, 'startDate', 'ASC']
-      // ]
-    });
-    
-    return res.status(200).json({
+    const {withAttended} = req.query;
+    console.log(withAttended)
+    if (withAttended === 'false') {
+      // Get all attended eventIds for the user
+      const attendedEvents = await Attendance.findAll({
+        where: { userId },
+        attributes: ['eventId']
+      });
+      console.log('attendedEvents', attendedEvents)
+      const attendedEventIds = attendedEvents.map(a => a.eventId);
+      const registrations = await Registration.findAll({
+        where: { userId,
+          eventId: {
+            [Op.notIn]: attendedEventIds.length ? attendedEventIds : [0]
+          }
+        },
+        include: [
+          {
+            model: Event,
+            as: 'event',
+            attributes: ['id', 'title', 'point'],
+          
+          }
+        ]
+      });
+      return res.status(200).json({
       status: 'success',
       data: {
         registrations
       }
-    });
+      });
+    } else {
+
+      const registrations = await Registration.findAll({
+        where: { userId,
+          // eventId: {
+          //   [Op.notIn]: attendedEventIds.length ? attendedEventIds : [0]
+          // }
+        },
+        include: [
+          {
+            model: Event,
+            as: 'event',
+            attributes: ['id', 'title', 'point'],
+          
+          }
+        ]
+      });
+      
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          registrations
+        }
+      });
+    }
+
   } catch (error) {
     console.error('Get registrations error:', error);
     return res.status(500).json({
@@ -191,6 +218,45 @@ exports.getUserRegistrations = async (req, res) => {
     });
   }
 };
+
+exports.getUserRegistrationsNotAttended= async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    
+
+    // Find registrations where eventId is NOT in attendedEventIds
+    const registrations = await Registration.findAll({
+      where: {
+        userId,
+        eventId: {
+          [Op.notIn]: attendedEventIds.length ? attendedEventIds : [0]
+        }
+      },
+      include: [
+        {
+          model: Event,
+          as: 'event',
+          attributes: ['id', 'title', 'point']
+        }
+      ]
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      data: {
+        registrations
+      }
+    });
+  } catch (error) {
+    console.error('Get registration history error:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while fetching registration history'
+    });
+  }
+};
+
 
 // Update registration status (for admin and organizer)
 // exports.updateRegistrationStatus = async (req, res) => {
