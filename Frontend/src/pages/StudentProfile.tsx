@@ -85,42 +85,6 @@ const StudentProfile = () => {
     fetchAttendedEvents();
 
   }, [authToken]);
-  console.log(registeredEvents);
-  console.log(attendedEvents);
-  const [achievements] = useState([
-    {
-      id: 1,
-      title: 'First Timer',
-      description: 'Participated in your first event',
-      icon: 'award',
-      earned: true,
-      date: '2025-01-25'
-    },
-    {
-      id: 2,
-      title: 'Team Player',
-      description: 'Participated in 5 events',
-      icon: 'users',
-      earned: true,
-      date: '2025-03-20'
-    },
-    {
-      id: 3,
-      title: 'Overachiever',
-      description: 'Earned more than 150 points',
-      icon: 'trophy',
-      earned: true,
-      date: '2025-03-20'
-    },
-    {
-      id: 4,
-      title: 'Event Master',
-      description: 'Participated in 10 events',
-      icon: 'star',
-      earned: false,
-      progress: '5/10'
-    }
-  ]);
   
   const [activeTab, setActiveTab] = useState('registedEvents');
   
@@ -195,8 +159,8 @@ const StudentProfile = () => {
         </div>
         
         <div className="bg-white rounded-lg shadow p-6 flex items-center">
-          <div className="rounded-full bg-green-100 p-3 mr-4">
-            <Award className="h-6 w-6 text-green-600" />
+          <div className="rounded-full bg-blue-100 p-3 mr-4">
+            <Award className="h-6 w-6 text-blue-600" />
           </div>
           <div>
             <p className="text-sm text-gray-600">Points Earned</p>

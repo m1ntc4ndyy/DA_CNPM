@@ -5,12 +5,9 @@ import { Event } from '../types';
 import { Link } from 'react-router-dom';
 
 import { 
-  Calendar, 
   Clock, 
-  Edit2, 
   Filter, 
   MapPin, 
-  MoreHorizontal, 
   Plus, 
   Search, 
   Trash2, 
@@ -18,59 +15,79 @@ import {
   Edit
 } from "lucide-react";
 
+function useDebounce(value: string, delay = 500) {
+  const [debounced, setDebounced] = useState(value);
 
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debounced;
+}
 
 export default function EventManagementPage() {
   const { authToken } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [statusFilter, setStatusFilter] = useState("all");
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalEvents, setTotalEvents] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Simulated data fetch
+  
+  
+
+  // Apply filters
   useEffect(() => {
+    // let result = [...events];
+    
+    // // Status filter
+    // if (statusFilter !== "all") {
+    //   result = result.filter(event => event.status === statusFilter);
+    // }
+    
+    // // Search term
+    // if (searchTerm) {
+    //   const term = searchTerm.toLowerCase();
+    //   result = result.filter(event => 
+    //     event.title.toLowerCase().includes(term) ||
+    //     event.description.toLowerCase().includes(term) ||
+    //     event.location.toLowerCase().includes(term) ||
+    //     event.category?.toLowerCase().includes(term)
+    //   );
+    // }
+    
+    // setFilteredEvents(result);
     const fetchEvents = async () => {
       try {
         const response = await axiosInstance.get('/api/events', {
           headers: {
             Authorization: `Bearer ${authToken}`
+          },
+          params: {
+            page: currentPage,
+            search: debouncedSearchTerm,
+            status: statusFilter === "all" ? "" : statusFilter
           }
         });
         console.log(response.data.data)
         setEvents(response.data.data.events as Event[]);
+        setTotalPages(response.data.data.pagination.totalPages);
+        setTotalEvents(response.data.data.pagination.totalEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
-      } 
+      } finally {
+        setIsLoading(false);
+      }
     };
-
+    
     fetchEvents();
-    setIsLoading(false);
-   
-  }, []);
-
-  // Apply filters
-  useEffect(() => {
-    let result = [...events];
     
-    // Status filter
-    if (statusFilter !== "all") {
-      result = result.filter(event => event.status === statusFilter);
-    }
-    
-    // Search term
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result.filter(event => 
-        event.title.toLowerCase().includes(term) ||
-        event.description.toLowerCase().includes(term) ||
-        event.location.toLowerCase().includes(term) ||
-        event.category?.toLowerCase().includes(term)
-      );
-    }
-    
-    setFilteredEvents(result);
-  }, [events, statusFilter, searchTerm]);
+  }, [statusFilter, debouncedSearchTerm, currentPage]);
 
 
   const handleCreateEvent = () => {
@@ -126,13 +143,14 @@ export default function EventManagementPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Event Management</h1>
-          <button 
-            onClick={handleCreateEvent}
+          <Link 
+            to="/events/create"
+            // onClick={handleCreateEvent}
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Event
-          </button>
+          </Link>
         </div>
         
         {/* Filters and search */}
@@ -192,7 +210,10 @@ export default function EventManagementPage() {
                 type="text"
                 placeholder="Search events..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1); 
+                }}
                 className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
@@ -205,7 +226,7 @@ export default function EventManagementPage() {
             <div className="p-10 flex justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
             </div>
-          ) : filteredEvents.length === 0 ? (
+          ) : events.length === 0 ? (
             <div className="p-10 text-center text-gray-500">
               No events found. Try adjusting your filters or create a new event.
             </div>
@@ -235,7 +256,7 @@ export default function EventManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredEvents.map((event) => (
+                  {events.map((event) => (
                     <tr key={event.id} className="hover:bg-gray-50">
                       <td className="px-4 py-4 whitespace-nowrap">
                         <div className="flex items-center">
@@ -337,7 +358,7 @@ export default function EventManagementPage() {
           )}
           
           {/* Pagination */}
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-4">
+          {/* <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-4">
             <div className="flex-1 flex justify-between sm:hidden">
               <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 Previous
@@ -349,8 +370,8 @@ export default function EventManagementPage() {
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700">
-                  Showing <span className="font-medium">1</span> to <span className="font-medium">{filteredEvents.length}</span> of{' '}
-                  <span className="font-medium">{filteredEvents.length}</span> results
+                  Showing <span className="font-medium">1</span> to <span className="font-medium">{events.length}</span> of{' '}
+                  <span className="font-medium">{totalEvents}</span> results
                 </p>
               </div>
               <div>
@@ -362,7 +383,7 @@ export default function EventManagementPage() {
                     </svg>
                   </button>
                   <button className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    1
+                    {currentPage}
                   </button>
                   <button className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                     <span className="sr-only">Next</span>
@@ -373,7 +394,75 @@ export default function EventManagementPage() {
                 </nav>
               </div>
             </div>
-          </div>
+          </div> */}
+          <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+  {/* Mobile View */}
+  <div className="flex-1 flex justify-between sm:hidden">
+    <button
+      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Previous
+    </button>
+    <button
+      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Next
+    </button>
+  </div>
+
+  {/* Desktop View */}
+  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+    <div>
+      <p className="text-sm text-gray-700">
+        Showing <span className="font-medium">{(currentPage - 1) * 5 + 1}</span> to{' '}
+        <span className="font-medium">{Math.min(currentPage * 5, totalEvents)}</span> of{' '}
+        <span className="font-medium">{totalEvents}</span> results
+      </p>
+    </div>
+    <div>
+      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span className="sr-only">Previous</span>
+          <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path
+              fillRule="evenodd"
+              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+
+        <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span className="sr-only">Next</span>
+          <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
     </div>

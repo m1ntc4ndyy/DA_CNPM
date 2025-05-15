@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Save, X } from "lucide-react";
 import axiosInstance from '../utils/axiosInstance';
 import { useAuth } from '../context/AuthProvider';
-
+import { useNavigate } from "react-router-dom"; 
 export default function CreateEvent() {
+    const navigate = useNavigate();
     const { authToken } = useAuth();
     const [formData, setFormData] = useState({
         title: "",
@@ -40,6 +41,7 @@ export default function CreateEvent() {
 
             console.log("Event data submitted:", formData);
             alert("Event created successfully!");
+            navigate("/manage");
         } catch (error) {
             console.error("Error creating event:", error);
             alert("Failed to create event.");
