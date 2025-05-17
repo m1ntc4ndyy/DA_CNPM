@@ -22,7 +22,7 @@ export interface Event {
   registeredUsers: number[];
   registrationCount: number;
   attendedUsers?: number[];
-}
+} 
 
 export interface AuthContextType {
   currentUser: User | null;

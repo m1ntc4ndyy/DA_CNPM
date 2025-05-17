@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, Clock, MapPin, User, Edit, Trash, X, Save, AlertCircle, Users, Award } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Edit, Trash, X, Save, AlertCircle, Users, Award, QrCode } from 'lucide-react';
 import { Event } from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
@@ -197,8 +197,25 @@ export default function EventUpdate() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow">
-        <div className="max-w-4xl mx-auto px-4 py-6 flex justify-end items-center">
+        <div className="max-w-4xl mx-auto px-4 py-6 flex justify-between items-center">
           {!isEditing && event && (
+            <>
+            <div className="flex space-x-2">
+              <button 
+                onClick={ () => navigate(`/events/${eventId}/registrants`)}
+                className="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm font-medium hover:bg-blue-100"
+              >
+                <Users size={20} className="mr-1" />
+                View Registrants
+              </button>
+              <button 
+                onClick={() => navigate(`/events/${eventId}/qrcode`)}
+                className="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm font-medium hover:bg-blue-100"
+              >
+                <QrCode size={20} className="mr-1" />
+                QR Code
+              </button>
+            </div>
             
             <div className="flex space-x-3">
               {event.status === "draft" && (
@@ -249,6 +266,8 @@ export default function EventUpdate() {
                 Delete
               </button>
             </div>
+            </>
+
           )}
         </div>
       </header>
