@@ -637,8 +637,8 @@
 									"    pm.expect(pm.response.json().data.events.length).to.be.eql(6);\r",
 									"});\r",
 									"\r",
-									"pm.environment.set(\"event_id\",pm.response.json().data.events[5].id);\r",
-									"pm.environment.set(\"test_event_id\",pm.response.json().data.events[0].id);\r",
+									"pm.environment.set(\"event_id\",pm.response.json().data.events[0].id);\r",
+									"pm.environment.set(\"test_event_id\",pm.response.json().data.events[1].id);\r",
 									""
 								],
 								"type": "text/javascript",
@@ -843,6 +843,180 @@
 								"events",
 								"{{event_id}}",
 								"publish"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Registrations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/registrations/my-registrations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"registrations",
+								"my-registrations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Attendance",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/attendances/my-history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"attendances",
+								"my-history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create QR code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"create qrcode\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.expect(pm.response.json().data.qrCode.id).to.not.be.null;\r",
+									"    pm.environment.set(\"qrcode\", pm.response.json().data.qrCode.code);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/qr/{{event_id}}/generate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"qr",
+								"{{event_id}}",
+								"generate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"checkin\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/attendances/check-in/{{qrcode}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"attendances",
+								"check-in",
+								"{{qrcode}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Participants",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/events/{{event_id}}/participants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"events",
+								"{{event_id}}",
+								"participants"
 							]
 						}
 					},
