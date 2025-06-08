@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from '../utils/axiosInstance';
 import { useAuth } from '../context/AuthProvider';
 import { Event } from '../types';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { 
   Clock, 
@@ -37,7 +37,8 @@ export default function EventManagementPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalEvents, setTotalEvents] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const Navigate = useNavigate();
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -69,7 +70,7 @@ export default function EventManagementPage() {
 
 
   const handleEditEvent = (id:string) => {
-    console.log("Edit event", id);
+    Navigate(`/events/update/${id}`);
   };
 
   const handleDeleteEvent = (id:string) => {
@@ -243,7 +244,7 @@ export default function EventManagementPage() {
                             )}
                           </div> */}
                           <div className="ml-4">
-                            <Link to={`/events/update/${event.id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600 hover:underline hover:cursor-pointer hover:scale-110 transition-transform duration-200 origin-top-left">
+                            <Link to={`/events/participant/${event.id}`} className="text-sm font-medium text-gray-900 hover:text-indigo-600 hover:underline hover:cursor-pointer hover:scale-110 transition-transform duration-200 origin-top-left">
                               {event.title}
                             </Link>
                             <div className="text-sm text-gray-500 truncate max-w-xs">

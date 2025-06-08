@@ -35,7 +35,7 @@ const App: React.FC = () => {
           <Route path="/events/:eventId" element={<EventDetailsPage />} />
           <Route path="/temp" element={<EventCard />} />
           <Route path="/temp2" element={<EventAdminPanel />} />
-          <Route path="/events/update/:eventId" element={<EventParticipantsDashboard />} />
+          <Route path="/events/participant/:eventId" element={<EventParticipantsDashboard />} />
 
 
           {/* Protected routes */}

@@ -75,12 +75,13 @@ export default function EventParticipantsDashboard() {
     };
   });
 
+  
   const renderParticipantsTable = () => {
     
     let displayData = allParticipants;
     
     if (activeTab === 'registered') {
-      displayData = allParticipants;
+      displayData = allParticipants.filter(p => !p.checkedIn);
     } else if (activeTab === 'attended') {
       displayData = allParticipants.filter(p => p.checkedIn);
     }

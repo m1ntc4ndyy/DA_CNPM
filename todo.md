@@ -16,18 +16,17 @@
 ### **3. Event_Registrations (Đăng ký sự kiện)**
 [x] Sinh viên đăng ký tham gia sự kiện trong thời gian cho phép.
 [x] Hủy đăng ký nếu sự kiện chưa diễn ra.
-[] Quản lý danh sách sinh viên đăng ký (BTC, Nhà trường).
+[be] Quản lý danh sách sinh viên đăng ký (BTC, Nhà trường).
 
 ### **4. QR_Codes (Mã điểm danh)**
 [be] BTC tạo mã QR cho sự kiện để điểm danh.
 [be] Mã QR có thời gian hiệu lực và gắn liền với sự kiện.
-[] Xóa mã QR khi không còn cần thiết.
+[x] Xóa mã QR khi không còn cần thiết.
 
 ### **5. Attendance (Điểm danh)**
 [] Sinh viên quét mã QR để điểm danh sự kiện.
 [] Lưu lịch sử quét mã.
-[] BTC hoặc Nhà trường xác thực điểm danh (APPROVED/REJECTED).
-[] Xem danh sách điểm danh của từng sinh viên.
+[x] Xem danh sách điểm danh của từng sinh viên.
 
 ### **6. Certificates (Minh chứng tham gia sự kiện)**
 [] Cấp minh chứng tham gia sự kiện nếu sinh viên được phê duyệt điểm danh.
