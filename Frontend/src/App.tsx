@@ -68,7 +68,8 @@ const App: React.FC = () => {
             path="/events/update/:eventId" 
             element={
               <ProtectedRoute requiredRole="admin">
-                <EventUpdate />
+                {/* <EventUpdate /> */}
+                <EventAdminPanel />
               </ProtectedRoute>
             } 
           />

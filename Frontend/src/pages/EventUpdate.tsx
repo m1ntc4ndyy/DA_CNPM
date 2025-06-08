@@ -202,11 +202,11 @@ export default function EventUpdate() {
             <>
             <div className="flex space-x-2">
               <button 
-                onClick={ () => navigate(`/events/${eventId}/registrants`)}
+                onClick={ () => navigate(`/events/participant/${eventId}`)}
                 className="flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded text-sm font-medium hover:bg-blue-100"
               >
                 <Users size={20} className="mr-1" />
-                View Registrants
+                View Participants
               </button>
               <button 
                 onClick={() => navigate(`/events/${eventId}/qrcode`)}
