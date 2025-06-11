@@ -29,7 +29,9 @@ export default function MainPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [events, setEvents] = useState<Event[]>([]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalEvents, setTotalEvents] = useState(0);
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -39,9 +41,14 @@ export default function MainPage() {
           },
           params:{
             status: 'published',
+            page: currentPage,
+            limit: 4, // Adjust limit as needed
+            
           }
         });
         console.log(response.data.data)
+        setTotalEvents(response.data.data.pagination.totalEvents);
+        setTotalPages(response.data.data.pagination.totalPages); // Assuming 4 events per page
         setEvents(response.data.data.events as Event[]);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -49,7 +56,7 @@ export default function MainPage() {
     };
 
     fetchEvents();
-  }, []);
+  }, [currentPage]);
 
 
 
@@ -144,7 +151,7 @@ export default function MainPage() {
             )}
 
             {/* Pagination */}
-            <div className="mt-8 flex justify-center">
+            {/* <div className="mt-8 flex justify-center">
               <nav className="flex items-center space-x-2">
                 <button className="px-3 py-1 border rounded-md hover:bg-gray-100">
                   Previous
@@ -158,6 +165,52 @@ export default function MainPage() {
                   Next
                 </button>
               </nav>
+            </div> */}
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between w-full">
+              {/* <div>
+                <p className="text-sm text-gray-700">
+                  Showing <span className="font-medium">{(currentPage - 1) * 5 + 1}</span> to{' '}
+                  <span className="font-medium">{Math.min(currentPage * 5, totalEvents)}</span> of{' '}
+                  <span className="font-medium">{totalEvents}</span> results
+                </p>
+              </div> */}
+              <div>
+                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="sr-only">Previous</span>
+                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path
+                        fillRule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+
+                  <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                    Page {currentPage} of {totalPages}
+                  </span>
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span className="sr-only">Next</span>
+                    <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path
+                        fillRule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </nav>
+              </div>
             </div>
           </div>
 

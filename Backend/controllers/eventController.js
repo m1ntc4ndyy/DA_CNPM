@@ -273,8 +273,8 @@ exports.getEventById = async (req, res) => {
       data: {
         event: {
           ...event.dataValues,
-          startDate: event.startDate,
-          startTime: event.startTime,
+          startDate: formattedDate(event.startDate),
+          startTime: formattedTime(event.startTime),
           registrationDeadline: event.registrationDeadline,
         },
       }

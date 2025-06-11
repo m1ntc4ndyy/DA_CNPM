@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AlertCircle, Calendar, QrCode, Users, Clock, MapPin, Award, Tag, Edit, Trash2, Eye, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Save, AlertCircle, Calendar, QrCode, Users, Clock, MapPin, Award, Tag, Edit, Trash2, Eye, ToggleLeft, ToggleRight } from 'lucide-react';
 import { Event } from '../types';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
@@ -103,7 +103,8 @@ export default function EventAdminPanel() {
   
   const navigateToQRCode = () => {
     // In a real application, this would navigate to the QR code page
-    navigate(`/events/qr-code/${eventId}`);
+    // navigate(`/events/qr-code/${eventId}`);
+    alert('chua chay duoc');
   };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -220,23 +221,6 @@ export default function EventAdminPanel() {
         <div className="bg-gray-800 text-white p-3 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium">Admin Controls</span>
-          <div className="h-4 w-px bg-gray-600"></div>
-          <button 
-            onClick={handleTogglePublish}
-            className="flex items-center text-sm px-2 py-1 rounded hover:bg-gray-700"
-          >
-            {isPublished ? (
-              <>
-                <ToggleRight size={16} className="mr-1 text-green-400" />
-                <span>Published</span>
-              </>
-            ) : (
-              <>
-                <ToggleLeft size={16} className="mr-1 text-yellow-400" />
-                <span>Draft</span>
-              </>
-            )}
-          </button>
         </div>
         <div className="flex space-x-2">
           <button 
@@ -423,22 +407,35 @@ export default function EventAdminPanel() {
         <div className="flex items-center space-x-2">
           <span className="text-sm font-medium">Admin Controls</span>
           <div className="h-4 w-px bg-gray-600"></div>
-          <button 
-            onClick={handleTogglePublish}
-            className="flex items-center text-sm px-2 py-1 rounded hover:bg-gray-700"
-          >
-            {isPublished ? (
-              <>
-                <ToggleRight size={16} className="mr-1 text-green-400" />
-                <span>Published</span>
-              </>
-            ) : (
-              <>
-                <ToggleLeft size={16} className="mr-1 text-yellow-400" />
-                <span>Draft</span>
-              </>
-            )}
-          </button>
+          {eventData.status === "draft" && (
+          <button
+                onClick={async () => {
+                  if (!eventId) return;
+
+                  setIsLoading(true);
+                  try {
+                    await axiosInstance.post(
+                      `/api/events/${eventId}/publish`,
+                      {},
+                      {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                      }
+                    );
+                    showSuccessMessage('Event published successfully!');
+                    setEventData(prev => ({ ...prev!, status: 'published' }));
+                  } catch (error) {
+                    console.error('Error publishing event:', error);
+                    setErrorMessage('Failed to publish event. Please try again.');
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+                disabled={isLoading}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Publish Event
+          </button>)}
         </div>
         <div>
           {/* Success message */}
@@ -570,7 +567,7 @@ export default function EventAdminPanel() {
             <h3 className="text-sm font-medium text-gray-500 mb-1">Start Date & Time</h3>
             <div className="flex items-center text-gray-800 font-medium">
               <Calendar size={18} className="mr-2 text-indigo-500" />
-              {formatDisplayDate(eventData?.startDate)} at {eventData?.startDate.split('T')[1].slice(0, 5)}  
+              {formatDisplayDate(eventData?.startDate)} at {eventData?.startTime}  
             </div>
           </div>
           
@@ -585,9 +582,9 @@ export default function EventAdminPanel() {
           <div>
             <h3 className="text-sm font-medium text-gray-500 mb-1">Status</h3>
             <div className="flex items-center">
-              <div className={`w-3 h-3 rounded-full mr-2 ${isPublished ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-              <span className={`text-sm font-medium ${isPublished ? 'text-green-700' : 'text-yellow-700'}`}>
-                {isPublished ? 'Published' : 'Draft'}
+              <div className={`w-3 h-3 rounded-full mr-2 ${eventData?.status === 'published' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+              <span className={`text-sm font-medium ${eventData?.status === 'published' ? 'text-green-700' : 'text-yellow-700'}`}>
+                {eventData?.status === 'published' ? 'Published' : 'Draft'}
               </span>
             </div>
           </div>

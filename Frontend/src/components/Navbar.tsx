@@ -44,9 +44,7 @@ const Navbar: React.FC = () => {
                   <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                   Manage
                   </Link>
-                  <Link to="/temp2" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
-                    Manage
-                  </Link>
+                  
                   </>
 
               )}

@@ -29,7 +29,6 @@ function useDebounce(value: string, delay = 500) {
 export default function EventManagementPage() {
   const { authToken } = useAuth();
   const [events, setEvents] = useState<Event[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [statusFilter, setStatusFilter] = useState("all");
