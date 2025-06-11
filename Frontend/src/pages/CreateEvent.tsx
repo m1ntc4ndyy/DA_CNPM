@@ -3,9 +3,12 @@ import { Save, X } from "lucide-react";
 import axiosInstance from '../utils/axiosInstance';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from "react-router-dom"; 
+import { AlertCircle } from "lucide-react";
 export default function CreateEvent() {
     const navigate = useNavigate();
     const { authToken } = useAuth();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    
     const [formData, setFormData] = useState({
         title: "",
         startDate: "",
@@ -38,8 +41,50 @@ export default function CreateEvent() {
             alert("Failed to create QR code.");
         }
     }
-
+    const showErrorMessage = (message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 5000);
+  };
     const handleSave = async () => {
+        // Validation
+        if (!formData.title.trim()) {
+            showErrorMessage("Event title cannot be empty.");
+            return;
+        }
+        if (!formData.startDate) {
+            showErrorMessage("Event date cannot be empty.");
+            return;
+        }
+        if (!formData.startTime) {
+            showErrorMessage("Event time cannot be empty.");
+            return;
+        }
+        if (!formData.registrationDeadline) {
+            showErrorMessage("Registration deadline cannot be empty.");
+            return;
+        }
+        if (!formData.category) {
+            showErrorMessage("Please select a category.");
+            return;
+        }
+        if (!formData.location.trim()) {
+            showErrorMessage("Location cannot be empty.");
+            return;
+        }
+        if (!formData.description.trim()) {
+            showErrorMessage("Description cannot be empty.");
+            return;
+        }
+        if (formData.capacity <= 0) {
+            showErrorMessage("Expected attendees must be greater than 0.");
+            return;
+        }
+        if (formData.point < 0) {
+            showErrorMessage("Point cannot be negative.");
+            return;
+        }
         setIsLoading(true);
         try {
             const res = await axiosInstance.post("/api/events", {...formData}, 
@@ -69,6 +114,20 @@ export default function CreateEvent() {
     return (
         <main className="max-w-4xl mx-auto px-4 py-8">
             <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+                {errorMessage && (
+                <div className="max-w-4xl mx-auto mt-4 px-4">
+                    <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded">
+                        <div className="flex">
+                        <div className="flex-shrink-0">
+                            <AlertCircle className="h-5 w-5 text-red-400" />
+                        </div>
+                        <div className="ml-3">
+                            <p className="text-sm text-red-700">{errorMessage}</p>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                )}
                 <div className="px-4 py-5 sm:p-6">
                     <div className="space-y-6">
                         <div>

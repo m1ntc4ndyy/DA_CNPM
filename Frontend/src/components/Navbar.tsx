@@ -34,19 +34,15 @@ const Navbar: React.FC = () => {
             
             {/* Desktop Navigation */}
             <nav className="hidden md:flex sm:hidden items-center space-x-6">
-            
               <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                 Events
               </Link>
-              
               {isAdmin() && (
                   <>
                   <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                   Manage
                   </Link>
-                  
                   </>
-
               )}
               <Link to="/profile" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                 Profile
@@ -79,11 +75,20 @@ const Navbar: React.FC = () => {
           
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 space-y-3">
-              <a href="#" className="block hover:text-blue-200 py-2">Calendar</a>
-              <a href="#" className="block hover:text-blue-200 py-2">Registration</a>
-              <a href="#" className="block hover:text-blue-200 py-2">About</a>
-              <a href="#" className="block hover:text-blue-200 py-2">Contact</a>
+            <div className="md:hidden flex flex-col py-4 space-y-3">
+              <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                Events
+              </Link>
+              {isAdmin() && (
+                  <>
+                  <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                  Manage
+                  </Link>
+                  </>
+              )}
+              <Link to="/profile" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+                Profile
+              </Link>
               <div className="flex items-center">
                 <div className="flex items-center mr-4">
                   <User className="h-5 w-5 mr-1" />
