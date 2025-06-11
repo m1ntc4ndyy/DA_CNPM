@@ -1,7 +1,7 @@
 const { format } = require('sequelize/lib/utils');
 const { Event, User, Registration, Attendance, QRCode } = require('../models');
 const { Op } = require('sequelize');
-
+const {createQRCode} = require('../utils/qrGenerator');
 const formattedDate = (isoDate) => {
   const date = new Date(isoDate);
   const formatted = `${date.getDate().toString().padStart(2, '0')}/${
@@ -266,15 +266,15 @@ exports.getEventById = async (req, res) => {
       
       event.dataValues.hasAttended = !!attendance;
     }
-    event.dataValues.unFormattedStartDate = event.startDate;
-    event.dataValues.unFormattedStartTime = event.startTime;
+    event.dataValues.formattedStartDate = formattedDate(event.startDate);
+    event.dataValues.formattedStartTime = formattedTime(event.startTime);
     return res.status(200).json({
       status: 'success',
       data: {
         event: {
           ...event.dataValues,
-          startDate: formattedDate(event.startDate),
-          startTime: formattedTime(event.startTime),
+          startDate: event.startDate,
+          startTime: event.startTime,
           registrationDeadline: event.registrationDeadline,
         },
       }

@@ -71,7 +71,18 @@ export default function EventAdminPanel() {
   const handleDeleteCancel = () => {
     setShowDeleteConfirm(false);
   };
-  
+  const generateQRCode = async (eventId : string) => {
+        try {
+            await axiosInstance.post(`/api/qr/${eventId}/generate`, {}, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                }
+            });
+        } catch (error) {
+            console.error("Error creating QR code:", error);
+            alert("Failed to create QR code.");
+        }
+    }
   const handleDeleteEvent = async () => {
     // In a real application, this would make an API call to delete the event
     if (!eventId) return;
@@ -102,11 +113,13 @@ export default function EventAdminPanel() {
   };
   
   const navigateToQRCode = () => {
-    // In a real application, this would navigate to the QR code page
-    // navigate(`/events/qr-code/${eventId}`);
-    alert('chua chay duoc');
+    if (eventData?.status !== 'published') {
+      setErrorMessage('Event must be published to generate a QR code.');
+      return;
+    }
+    window.open(`/events/qr-code/${eventId}`, '_blank');
   };
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
     if (editedEvent) {
@@ -332,13 +345,19 @@ export default function EventAdminPanel() {
             <div className="flex items-center">
               <Tag size={18} className="mr-2 text-indigo-500" />
               <span className=" text-sm font-medium py-1 rounded-full">
-                <select name="category" id="category" className='border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'>
-                  <option value="meeting" selected={editedEvent?.category === 'meeting'}>Meeting</option>
-                  <option value="academic" selected={editedEvent?.category === 'academic'}>Academic</option>
-                  <option value="technology" selected={editedEvent?.category === 'technology'}>Technology</option>
-                  <option value="art" selected={editedEvent?.category === 'art'}>Art</option>
-                  <option value="sport" selected={editedEvent?.category === 'sport'}>Sport</option>
-                  <option value="other" selected={editedEvent?.category === 'other'}>Other</option>
+                <select
+                  name="category"
+                  id="category"
+                  value={editedEvent?.category || ''}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="meeting">Meeting</option>
+                  <option value="academic">Academic</option>
+                  <option value="technology">Technology</option>
+                  <option value="art">Art</option>
+                  <option value="sport">Sport</option>
+                  <option value="other">Other</option>
                 </select>
               </span>
             </div>
@@ -367,7 +386,7 @@ export default function EventAdminPanel() {
                 type="time"
                 name="time"
                 id="time"
-                value={editedEvent?.startTime || ''}
+                value={editedEvent?.startTime.slice(0, 5) || ''}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -423,6 +442,7 @@ export default function EventAdminPanel() {
                     );
                     showSuccessMessage('Event published successfully!');
                     setEventData(prev => ({ ...prev!, status: 'published' }));
+                    await generateQRCode(eventId);
                   } catch (error) {
                     console.error('Error publishing event:', error);
                     setErrorMessage('Failed to publish event. Please try again.');
@@ -567,7 +587,7 @@ export default function EventAdminPanel() {
             <h3 className="text-sm font-medium text-gray-500 mb-1">Start Date & Time</h3>
             <div className="flex items-center text-gray-800 font-medium">
               <Calendar size={18} className="mr-2 text-indigo-500" />
-              {formatDisplayDate(eventData?.startDate)} at {eventData?.startTime}  
+              {formatDisplayDate(eventData?.startDate)} at {eventData?.formattedStartTime}  
             </div>
           </div>
           
@@ -593,7 +613,7 @@ export default function EventAdminPanel() {
             <h3 className="text-sm font-medium text-gray-500 mb-1">Stats</h3>
             <div className="flex items-center text-gray-800 font-medium">
               <Eye size={18} className="mr-2 text-indigo-500" />
-              0 Registered
+              {eventData?.registrationCount} Participants
             </div>
           </div>
         </div>

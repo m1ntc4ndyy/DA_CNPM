@@ -14,6 +14,7 @@ import MainPage from './pages/MainPage';
 import EventCard from './pages/Temp'; // Adjust the import based on your actual file structure
 import EventAdminPanel from './pages/EventAdminPanel';
 import EventParticipantsDashboard from './pages/event-participants-table';
+import CheckInPage from './pages/CheckInPage';
 const UnauthorizedPage: React.FC = () => (
   <div className="flex flex-col items-center justify-center h-screen">
     <h1 className="text-2xl font-bold mb-4">Unauthorized Access</h1>
@@ -36,7 +37,11 @@ const App: React.FC = () => {
           <Route path="/temp" element={<EventCard />} />
           <Route path="/temp2" element={<EventAdminPanel />} />
           <Route path="/events/participant/:eventId" element={<EventParticipantsDashboard />} />
-
+          <Route path="/attendances/check-in/:qrcode" element={
+            <ProtectedRoute>
+              <CheckInPage />
+            </ProtectedRoute>
+          } />
 
           {/* Protected routes */}
           <Route 

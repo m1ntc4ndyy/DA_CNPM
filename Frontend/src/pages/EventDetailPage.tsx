@@ -230,9 +230,9 @@ export default function EventDetailsPage() {
                     toggleRegistration(eventData.id);
                     
                   }}
-
+                  disabled={eventData.hasAttended}
                 >
-                  {eventData.isRegistered ? 'Unregister' : 'Register'}
+                  {eventData.hasAttended ? 'Attended' : eventData.isRegistered ? 'Unregister' : 'Register'}
                 </button>
                 <button className="bg-gray-100 text-gray-700 px-4 py-3 rounded-md hover:bg-gray-200 transition flex items-center mb-2">
                   <Share2 className="h-5 w-5 mr-2" /> Share

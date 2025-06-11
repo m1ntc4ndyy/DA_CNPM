@@ -24,6 +24,17 @@ const categories: CategoryFilter[] = [
   { id: "other", name: "Other", count: 1 }, 
 ];
 
+function useDebounce(value: string, delay = 500) {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debounced;
+}
+
 export default function MainPage() {
   const {authToken } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -32,6 +43,8 @@ export default function MainPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalEvents, setTotalEvents] = useState(0);
+  const debouncedSearchTerm = useDebounce(searchQuery, 500);
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -43,12 +56,13 @@ export default function MainPage() {
             status: 'published',
             page: currentPage,
             limit: 4, // Adjust limit as needed
-            
+            search: searchQuery,
+            category: selectedCategory === "all" ? undefined : selectedCategory
           }
         });
         console.log(response.data.data)
         setTotalEvents(response.data.data.pagination.totalEvents);
-        setTotalPages(response.data.data.pagination.totalPages); // Assuming 4 events per page
+        setTotalPages(response.data.data.pagination.totalPages); 
         setEvents(response.data.data.events as Event[]);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -56,23 +70,7 @@ export default function MainPage() {
     };
 
     fetchEvents();
-  }, [currentPage]);
-
-
-
-
-
-  // Filter events based on selected category and search query
-  const filteredEvents = events.filter(event => {
-    const matchesCategory = selectedCategory === "all" || 
-                           event.category.toLowerCase() === selectedCategory.toLowerCase();
-    const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         event.location.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  // Get featured events
+  }, [currentPage, debouncedSearchTerm, selectedCategory]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,13 +95,13 @@ export default function MainPage() {
 
             {/* Events List */}
             <h2 className="text-2xl font-bold mb-4">All Events</h2>
-            {filteredEvents.length === 0 ? (
+            {events.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-8 text-center">
                 <p className="text-gray-500">No events found matching your criteria.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
-                {filteredEvents.map((event) => (
+                {events.map((event) => (
                   <div key={event.id} className="bg-white rounded-lg shadow overflow-hidden flex flex-col h-full">
                     <div className="relative">
                       <img

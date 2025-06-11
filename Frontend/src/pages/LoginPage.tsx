@@ -1,12 +1,13 @@
 import React, { useState, FormEvent, useEffect } from 'react';
 import { useAuth} from '../context/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
   const { handleLogin, currentUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     setError('');
@@ -17,13 +18,18 @@ const LoginPage: React.FC = () => {
     handleLogin(email, password);
   };
   useEffect(() => {
-    if (currentUser) {
-      
-        navigate("/"); // Default to main page if role is not recognized
-      
+  if (currentUser) {
+    const params = new URLSearchParams(location.search);
+    const redirectTo = params.get("redirectTo");
+
+            console.log("Login successful. Checking for redirectTo..."); // ADD THIS
+            console.log("location.search:", location.search); // ADD THIS
+            console.log("Retrieved redirectTo:", redirectTo); // ADD THIS
+
+    navigate(redirectTo || "/", { replace: true });
     }
-  }, [currentUser, navigate]);
-  return (
+  }, [currentUser, navigate, location.search]);
+    return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>

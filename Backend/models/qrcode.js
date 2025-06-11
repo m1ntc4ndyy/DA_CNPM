@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true
       },
+      dataURL: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
       expiresAt: {
         type: DataTypes.DATE,
         allowNull: false

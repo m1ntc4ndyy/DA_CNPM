@@ -84,9 +84,21 @@ const Navbar: React.FC = () => {
               <a href="#" className="block hover:text-blue-200 py-2">Registration</a>
               <a href="#" className="block hover:text-blue-200 py-2">About</a>
               <a href="#" className="block hover:text-blue-200 py-2">Contact</a>
-              <button className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-left">
-                Login
-              </button>
+              <div className="flex items-center">
+                <div className="flex items-center mr-4">
+                  <User className="h-5 w-5 mr-1" />
+                  <span className="text-sm font-medium">
+                    {currentUser.name} ({currentUser.role})
+                  </span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-800"
+                >
+                  <LogOut className="h-4 w-4 mr-1" />
+                  Logout
+                </button>
+              </div>
             </div>
           )}
         </div>

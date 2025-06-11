@@ -26,6 +26,18 @@ export default function CreateEvent() {
             [name]: value,
         }));
     };
+    const generateQRCode = async (eventId : string) => {
+        try {
+            await axiosInstance.post(`/api/qr/${eventId}/generate`, {}, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                }
+            });
+        } catch (error) {
+            console.error("Error creating QR code:", error);
+            alert("Failed to create QR code.");
+        }
+    }
 
     const handleSave = async () => {
         setIsLoading(true);
@@ -36,11 +48,14 @@ export default function CreateEvent() {
                         Authorization: `Bearer ${authToken}`,
                     }
                 }
-              
             );  
-
             console.log("Event data submitted:", formData);
             alert("Event created successfully!");
+            const eventId = res.data?.data?.event?.id;
+            if (!eventId) {
+                throw new Error("Event ID not returned from server");
+            }
+            await generateQRCode(eventId);
             navigate("/manage");
         } catch (error) {
             console.error("Error creating event:", error);
@@ -48,6 +63,7 @@ export default function CreateEvent() {
         } finally {
             setIsLoading(false);
         }
+        
     };
 
     return (

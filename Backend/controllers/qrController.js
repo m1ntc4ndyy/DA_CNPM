@@ -39,19 +39,20 @@ exports.generateEventQR = async (req, res) => {
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + parseInt(expiresIn));
     
+    
+    // Generate QR code image
+    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+    const qrData = `${baseUrl}/attendances/check-in/${code}`;
+    const qrDataURL = await qrGenerator.generateQRCodeDataURL(qrData);
     // Save to database
     const qrCode = await QRCode.create({
       eventId,
       code,
       expiresAt,
+      dataURL: qrDataURL,
       isActive: true,
       createdBy: req.user.id
     });
-    
-    // Generate QR code image
-    const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-    const qrData = `${baseUrl}/api/attendances/check-in/${code}`;
-    const qrDataURL = await qrGenerator.generateQRCodeDataURL(qrData);
     
     return res.status(201).json({
       status: 'success',
