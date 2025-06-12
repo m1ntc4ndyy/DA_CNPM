@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthProvider';
 
 interface ProtectedRouteProps {
   children: ReactNode;
-  requiredRole?: string;
+  requiredRole?: string | string[];
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
@@ -20,7 +20,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
     return <Navigate to={`/login?redirectTo=${encodeURIComponent(location.pathname + location.search)}`} />;
   }
 
-  if (requiredRole && !hasRole(requiredRole)) {
+  if (
+    requiredRole &&
+    (
+      (Array.isArray(requiredRole) && !requiredRole.some(role => hasRole(role))) ||
+      (!Array.isArray(requiredRole) && !hasRole(requiredRole))
+    )
+  ) {
     return <Navigate to="/unauthorized" />;
   }
 

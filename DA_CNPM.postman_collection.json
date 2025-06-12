@@ -75,7 +75,93 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"student\",\r\n    \"email\" : \"student@gmail.com\",\r\n    \"password\" : \"2\",\r\n    \"phone\" : \"0905002002\",\r\n    \"role\" : \"student\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"student\",\r\n    \"studentId\" : \"123210141\",\r\n    \"email\" : \"student@gmail.com\",\r\n    \"password\" : \"2\",\r\n    \"phone\" : \"0905002002\",\r\n    \"role\" : \"student\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "student_user Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"create student user\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.expect(pm.response.json().data).to.have.property(\"token\");\r",
+									"    pm.expect(pm.response.json().data).to.have.property(\"user\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"student2\",\r\n    \"studentId\" : \"123210044\",\r\n    \"email\" : \"student2@gmail.com\",\r\n    \"password\" : \"2\",\r\n    \"phone\" : \"0905002002\",\r\n    \"role\" : \"student\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "student_user Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"create student user\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.expect(pm.response.json().data).to.have.property(\"token\");\r",
+									"    pm.expect(pm.response.json().data).to.have.property(\"user\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"student3\",\r\n    \"studentId\" : \"123210099\",\r\n    \"email\" : \"student3@gmail.com\",\r\n    \"password\" : \"2\",\r\n    \"phone\" : \"0905002002\",\r\n    \"role\" : \"student\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -972,7 +1058,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "{{admin_token}}",
+									"value": "{{student_token}}",
 									"type": "string"
 								}
 							]
@@ -988,6 +1074,49 @@
 								"attendances",
 								"check-in",
 								"{{qrcode}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get QRcode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"checkin\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.expect(pm.response.json().status).to.eql(\"success\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/qr/{{event_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"qr",
+								"{{event_id}}"
 							]
 						}
 					},
@@ -1180,13 +1309,47 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/registrations/my-registrations",
+							"raw": "{{base_url}}/registrations/my-registrations?withAttended=false",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"registrations",
 								"my-registrations"
+							],
+							"query": [
+								{
+									"key": "withAttended",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "My Attended",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{student_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/attendances/my-history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"attendances",
+								"my-history"
 							]
 						}
 					},

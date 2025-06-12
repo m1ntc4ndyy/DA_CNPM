@@ -145,3 +145,45 @@ exports.getProfile = async (req, res) => {
     });
   }
 }
+
+exports.changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming you have middleware to set req.user
+    const { currentPassword, newPassword } = req.body;
+    
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found'
+      });
+    }
+    
+    // Check current password
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Current password is incorrect'
+      });
+    }
+    
+    // Hash new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+    
+    // Update password
+    user.password = hashedNewPassword;
+    await user.save();
+    
+    return res.status(200).json({
+      status: 'success',
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while changing the password'
+    });
+  }
+} 

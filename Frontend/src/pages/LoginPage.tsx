@@ -8,14 +8,18 @@ const LoginPage: React.FC = () => {
   const { handleLogin, currentUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setError('');
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
     }
-    handleLogin(email, password);
+    await handleLogin(email, password);
+    // Check if login failed (currentUser will not be set)
+    if (!currentUser) {
+      setError('Login failed. Please check your credentials.');
+    }
   };
   useEffect(() => {
   if (currentUser) {

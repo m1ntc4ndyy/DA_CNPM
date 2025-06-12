@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthProvider';
 import { LogOut, User, Menu, X } from 'lucide-react';
 
 const Navbar: React.FC = () => {
-  const { currentUser, isAdmin, handleLogout } = useAuth();
+  const { currentUser, isAdmin, handleLogout, hasRole } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
               <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                 Events
               </Link>
-              {isAdmin() && (
+              {(hasRole("admin") || hasRole("organizer")) && (
                   <>
                   <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                   Manage
@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
               <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                 Events
               </Link>
-              {isAdmin() && (
+              {(hasRole("admin") || hasRole("organizer")) && (
                   <>
                   <Link to="/manage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
                   Manage

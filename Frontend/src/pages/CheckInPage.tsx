@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {useAuth} from "../context/AuthProvider"; 
 import axiosInstance from "../utils/axiosInstance";
 export default function CheckInPage() {
 	const {authToken} = useAuth();
 	const { qrcode } = useParams();
+	const [error, setError] = useState<string | null>(null);
 	const navigate = useNavigate();
 	useEffect(() => {
 		const checkIn = async () => {
@@ -22,6 +23,7 @@ export default function CheckInPage() {
 
 			} catch (error) {
 				console.error('Error during check-in:', error);
+				setError(error.response?.data?.message || 'Check-in failed. Please try again.');
 			}
 		};
 		checkIn();
@@ -30,8 +32,9 @@ export default function CheckInPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-4">Check-In Page</h1>
-      <p className="text-lg text-gray-700">This is the check-in page for event participants.</p>
+      {/* <p className="text-lg text-gray-700">This is the check-in page for event participants.</p> */}
       {/* Add your check-in logic and UI components here */}
+      {error && <p className="text-red-500">{error}</p>}	
     </div>
   );
 }

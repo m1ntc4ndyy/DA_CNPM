@@ -99,7 +99,7 @@ exports.getEventQRCodes = async (req, res) => {
     }
     
     // Get QR codes
-    const qrCodes = await QRCode.findAll({
+    const qrCodes = await QRCode.findOne({
       where: { eventId },
       order: [['createdAt', 'DESC']]
     });

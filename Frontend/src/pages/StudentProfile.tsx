@@ -3,7 +3,7 @@ import { User, Award, Calendar, CheckCircle, Clock, ChevronRight, Mail, Phone, S
 import axiosInstance  from '../utils/axiosInstance';
 import { useAuth } from '../context/AuthProvider';
 const StudentProfile = () => {
-  const { authToken} = useAuth();
+  const { authToken, currentUser} = useAuth();
 
   const [registeredEvents, setRegisteredEvents] = useState<Array<{
     id: string;
@@ -19,7 +19,7 @@ const StudentProfile = () => {
   const [attendedEvents, setAttendedEvents] = useState<Array<{
     id: string;
     userId: string;
-    registrationDate: string;
+    checkInTime: string;
     event: {
       id: string;
       title: string;
@@ -31,6 +31,7 @@ const StudentProfile = () => {
 
   const [student, setStudent] = useState({
     id: '',
+    studentId: '',
     name: '',
     email: '',
     phone: '',
@@ -93,6 +94,53 @@ const StudentProfile = () => {
   const pointsEarned = attendedEvents.reduce((sum, event) => sum + event.event.point, 0);
   const upcomingEvents = registeredEvents.length;
   
+  // State for change password modal and form
+  const [isChangePwdOpen, setIsChangePwdOpen] = useState(false);
+  const [pwdForm, setPwdForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [pwdError, setPwdError] = useState('');
+  const [pwdSuccess, setPwdSuccess] = useState('');
+  const [isPwdUpdating, setIsPwdUpdating] = useState(false);
+
+  // Handle change password form changes
+  const handlePwdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPwdForm({ ...pwdForm, [e.target.name]: e.target.value });
+    setPwdError('');
+    setPwdSuccess('');
+  };
+
+  // Change password function
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdError('');
+    setPwdSuccess('');
+    if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+      setPwdError('New password and confirm password do not match.');
+      return;
+    }
+    setIsPwdUpdating(true);
+    try {
+      await axiosInstance.put('/api/auth/change-password', {
+        currentPassword: pwdForm.currentPassword,
+        newPassword: pwdForm.newPassword
+      }, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+      setPwdSuccess('Password changed successfully.');
+      setPwdForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setIsChangePwdOpen(false), 1200);
+    } catch (error: any) {
+      setPwdError(error?.response?.data?.message || 'Failed to change password.');
+    } finally {
+      setIsPwdUpdating(false);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Profile Header */}
@@ -123,6 +171,13 @@ const StudentProfile = () => {
               <div className="mt-4 md:mt-0 flex items-center bg-indigo-50 px-4 py-2 rounded-full">
                 <Award className="h-5 w-5 text-indigo-600 mr-2" />
                 <span className="font-medium text-indigo-600">{student.point} Total Points</span>
+                {/* Change Password Button */}
+                <button
+                  className="ml-4 px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm"
+                  onClick={() => setIsChangePwdOpen(true)}
+                >
+                  Change Password
+                </button>
               </div>
             </div>
             
@@ -136,11 +191,12 @@ const StudentProfile = () => {
                 <Phone className="h-4 w-4 mr-2" />
                 <span>{student.phone}</span>
               </div>
-              
-              <div className="flex items-center text-gray-600">
-                <School className="h-4 w-4 mr-2" />
-                <span>Student ID: {student.id}</span>
-              </div>
+              {currentUser?.role == 'student' && (
+                <div className="flex items-center text-gray-600">
+                  <School className="h-4 w-4 mr-2" />
+                  <span>Student ID: {student.studentId}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -231,7 +287,7 @@ const StudentProfile = () => {
                         <h4 className="text-sm font-medium text-gray-900">{event.event.title}</h4>
                         <div className="mt-1 flex items-center">
                           <span className="text-xs text-gray-500">
-                            {new Date(event.registrationDate).toLocaleDateString()}
+                            {new Date(event.registrationDate).toLocaleDateString()} - {new Date(event.registrationDate).toLocaleTimeString()}
                           </span>
                           <span className="mx-2 text-gray-300">•</span>
                           <span className={`text-xs text-purple-600`}>
@@ -282,7 +338,7 @@ const StudentProfile = () => {
                         <h4 className="text-sm font-medium text-gray-900">{event.event.title}</h4>
                         <div className="mt-1 flex items-center">
                           <span className="text-xs text-gray-500">
-                            {new Date(event.registrationDate).toLocaleDateString()}
+                            {new Date(event.checkInTime).toLocaleDateString() + ' - ' + new Date(event.checkInTime).toLocaleTimeString()}
                           </span>
                           <span className="mx-2 text-gray-300">•</span>
                           <span className={`text-xs text-green-600`}>
@@ -311,6 +367,69 @@ const StudentProfile = () => {
           </div>
         )}
       </div>
+
+      {/* Change Password Modal */}
+      {isChangePwdOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Change Password</h2>
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Current Password</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  value={pwdForm.currentPassword}
+                  onChange={handlePwdChange}
+                  className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  value={pwdForm.newPassword}
+                  onChange={handlePwdChange}
+                  className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={pwdForm.confirmPassword}
+                  onChange={handlePwdChange}
+                  className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
+                  required
+                />
+              </div>
+              {pwdError && <div className="text-red-600 text-sm">{pwdError}</div>}
+              {pwdSuccess && <div className="text-green-600 text-sm">{pwdSuccess}</div>}
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  onClick={() => setIsChangePwdOpen(false)}
+                  disabled={isPwdUpdating}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  disabled={isPwdUpdating}
+                >
+                  {isPwdUpdating ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
