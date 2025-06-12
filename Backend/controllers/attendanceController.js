@@ -80,6 +80,13 @@ exports.checkIn = async (req, res) => {
       qrCodeId: qrCode.id
     });
     
+    // Update user points if applicable
+    if (event.point > 0) {
+      const user = await User.findByPk(userId);
+      user.points += event.point;
+      await user.save();
+    }
+
     return res.status(201).json({
       status: 'success',
       message: 'Check-in successful',

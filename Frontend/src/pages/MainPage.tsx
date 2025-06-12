@@ -54,6 +54,7 @@ export default function MainPage() {
           },
           params:{
             status: 'published',
+            isPublic: true,
             page: currentPage,
             limit: 4, // Adjust limit as needed
             search: searchQuery,

@@ -17,6 +17,7 @@ interface ExtendedEvent extends Event {
 
 export default function EventAdminPanel() {
   const [isPublished, setIsPublished] = useState(true);
+  const [isShow, setIsShow] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -37,6 +38,7 @@ export default function EventAdminPanel() {
         });
         setEventData(res.data.data.event);
         setEditedEvent(res.data.data.event);
+        setIsShow(res.data.data.event.isPublic);
         console.log(res.data.data.event);
       } catch (error) {
         console.error(error);
@@ -56,10 +58,21 @@ export default function EventAdminPanel() {
       setSuccessMessage('');
     }, 3000);
   };
-  const handleTogglePublish = () => {
-    setIsPublished(!isPublished);
+  const handleToggleShow = async () => {
+    try {
+      await axiosInstance.put(
+        `/api/events/${eventId}`,
+        { ...editedEvent, isPublic: !isShow },
+        {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        }
+      );
+      setIsShow(!isShow);
+    } catch (error) {
+      console.error('Error toggling event visibility:', error);
+    }
   };
-  
+
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -456,6 +469,22 @@ export default function EventAdminPanel() {
                 <Save className="w-4 h-4 mr-2" />
                 Publish Event
           </button>)}
+          <button 
+            onClick={handleToggleShow}
+            className="flex items-center text-sm px-2 py-1 rounded hover:bg-gray-700"
+          >
+            {isShow ? (
+              <>
+                <ToggleRight size={16} className="mr-1 text-green-400" />
+                <span>Show</span>
+              </>
+            ) : (
+              <>
+                <ToggleLeft size={16} className="mr-1 text-yellow-400" />
+                <span>Private</span>
+              </>
+            )}
+          </button>
         </div>
         <div>
           {/* Success message */}

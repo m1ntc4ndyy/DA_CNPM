@@ -127,6 +127,7 @@ exports.getAllEvents = async (req, res) => {
       whereConditions.organizerId = req.user.id;
     }
     
+    
     // Get events with pagination
     const { count, rows: events } = await Event.findAndCountAll({
       where: whereConditions,
