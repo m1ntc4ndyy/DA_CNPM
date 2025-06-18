@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  frontend:
+      build: ./frontend
+      ports:
+        - "5173:5173"
+      volumes:
+        - ./frontend:/app
+        - /app/node_modules
+      command: npm run dev
+      environment:
+        - CHOKIDAR_USEPOLLING=true
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=abcd1234
+      - DB_NAME=school_event_management
+    depends_on:
+      - db
+  
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd1234
+      MYSQL_DATABASE: school_event_management
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"  # Optional for connecting from your local machine
+
+volumes:
+  db_data:
